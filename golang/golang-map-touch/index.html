@@ -97,18 +97,18 @@
 
 
 
-  <meta name="description" content="最近一直在学习golang，本文是对于golang中map的实现原理的一次初探，我个人觉得原理比具体代码实现更有价值，所以主要探究原理，如有错误，敬请斧正。 本文基于go 1.14.2版本 是什么Map本文所讨论的Map是一种key-value键值对的存储结构，其中key是不能重复的。 实现的关键是哈希表，hash表的输入一般都大于输出，所以要解决冲突。 冲突解决方法 开放定址法  如果算出来的h">
+  <meta name="description" content="最近一直在学习golang，本文是对于golang中map的实现原理的一次初探，我个人觉得原理比具体代码实现更有价值，所以主要探究原理，如有错误，敬请斧正。 本文基于go 1.14.2版本 是什么Map本文所讨论的Map是一种key-value键值对的存储结构，其中key是不能重复的。 实现的关键是哈希表，hash表的输入一般都大于输出，所以要解决冲突。">
 <meta name="keywords" content="golang,map">
 <meta property="og:type" content="article">
 <meta property="og:title" content="golang map 实现原理初探">
 <meta property="og:url" content="https://shaffer.cn/golang/golang-map-touch/index.html">
 <meta property="og:site_name" content="朱晓峰">
-<meta property="og:description" content="最近一直在学习golang，本文是对于golang中map的实现原理的一次初探，我个人觉得原理比具体代码实现更有价值，所以主要探究原理，如有错误，敬请斧正。 本文基于go 1.14.2版本 是什么Map本文所讨论的Map是一种key-value键值对的存储结构，其中key是不能重复的。 实现的关键是哈希表，hash表的输入一般都大于输出，所以要解决冲突。 冲突解决方法 开放定址法  如果算出来的h">
+<meta property="og:description" content="最近一直在学习golang，本文是对于golang中map的实现原理的一次初探，我个人觉得原理比具体代码实现更有价值，所以主要探究原理，如有错误，敬请斧正。 本文基于go 1.14.2版本 是什么Map本文所讨论的Map是一种key-value键值对的存储结构，其中key是不能重复的。 实现的关键是哈希表，hash表的输入一般都大于输出，所以要解决冲突。">
 <meta property="og:locale" content="zh">
-<meta property="og:updated_time" content="2020-05-09T02:04:55.885Z">
+<meta property="og:updated_time" content="2020-05-09T02:15:58.436Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="golang map 实现原理初探">
-<meta name="twitter:description" content="最近一直在学习golang，本文是对于golang中map的实现原理的一次初探，我个人觉得原理比具体代码实现更有价值，所以主要探究原理，如有错误，敬请斧正。 本文基于go 1.14.2版本 是什么Map本文所讨论的Map是一种key-value键值对的存储结构，其中key是不能重复的。 实现的关键是哈希表，hash表的输入一般都大于输出，所以要解决冲突。 冲突解决方法 开放定址法  如果算出来的h">
+<meta name="twitter:description" content="最近一直在学习golang，本文是对于golang中map的实现原理的一次初探，我个人觉得原理比具体代码实现更有价值，所以主要探究原理，如有错误，敬请斧正。 本文基于go 1.14.2版本 是什么Map本文所讨论的Map是一种key-value键值对的存储结构，其中key是不能重复的。 实现的关键是哈希表，hash表的输入一般都大于输出，所以要解决冲突。">
 
 
 
@@ -396,7 +396,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2020-05-09 10:04:55" itemprop="dateModified" datetime="2020-05-09T10:04:55+08:00">2020-05-09</time>
+                <time title="Modified: 2020-05-09 10:15:58" itemprop="dateModified" datetime="2020-05-09T10:15:58+08:00">2020-05-09</time>
               </span>
             
           
@@ -452,6 +452,8 @@
 <p>本文基于go <code>1.14.2</code>版本</p>
 <h3 id="是什么Map"><a href="#是什么Map" class="headerlink" title="是什么Map"></a>是什么Map</h3><p>本文所讨论的Map是一种key-value键值对的存储结构，其中key是不能重复的。</p>
 <p>实现的关键是哈希表，hash表的输入一般都大于输出，所以要解决冲突。</p>
+<a id="more"></a>
+
 <h3 id="冲突解决方法"><a href="#冲突解决方法" class="headerlink" title="冲突解决方法"></a>冲突解决方法</h3><ol>
 <li><p>开放定址法</p>
 <p> 如果算出来的hash值所在的数组元素不为空，那就往这个数组后面继续找空的位置，找的方式又有几种常见方式：</p>

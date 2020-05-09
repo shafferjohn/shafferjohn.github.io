@@ -105,7 +105,7 @@
 <meta property="og:site_name" content="朱晓峰">
 <meta property="og:description" content="太长不看：重启大法好，sudo reboot 先说个题外话，dockerd是用sudo启动的话，docker-compose也要用sudo。 有一次排查问题，我多次重启docker sudo systemctl restart docker 并且删除了/run/containerd/containerd.sock和/var/run/containerd/containerd.sock两个socke">
 <meta property="og:locale" content="zh">
-<meta property="og:updated_time" content="2020-04-29T06:59:18.652Z">
+<meta property="og:updated_time" content="2020-05-09T02:18:04.795Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker无法启动解决方案">
 <meta name="twitter:description" content="太长不看：重启大法好，sudo reboot 先说个题外话，dockerd是用sudo启动的话，docker-compose也要用sudo。 有一次排查问题，我多次重启docker sudo systemctl restart docker 并且删除了/run/containerd/containerd.sock和/var/run/containerd/containerd.sock两个socke">
@@ -396,7 +396,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2020-04-29 14:59:18" itemprop="dateModified" datetime="2020-04-29T14:59:18+08:00">2020-04-29</time>
+                <time title="Modified: 2020-05-09 10:18:04" itemprop="dateModified" datetime="2020-05-09T10:18:04+08:00">2020-05-09</time>
               </span>
             
           
@@ -442,6 +442,8 @@
 
 <p>然后docker就起不来了 &gt;.&lt;</p>
 <p>那就排查问题，先看看<code>sudo systemctl status docker -l</code>和<code>sudo journalctl -xe</code></p>
+<a id="more"></a>
+
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">● docker.service - Docker Application Container Engine</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/docker.service; disabled; vendor preset: disabled)</span><br><span class="line">   Active: activating (start) since Thu 2019-10-10 13:48:27 CST; 14s ago</span><br><span class="line">     Docs: https://docs.docker.com</span><br><span class="line"> Main PID: 25992 (dockerd)</span><br><span class="line">    Tasks: 12</span><br><span class="line">   Memory: 39.7M</span><br><span class="line">   CGroup: /system.slice/docker.service</span><br><span class="line">           └─25992 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock</span><br><span class="line"></span><br><span class="line">Oct 10 13:48:27 node-1.local systemd[1]: Starting Docker Application Container Engine...</span><br><span class="line">Oct 10 13:48:27 node-1.local dockerd[25992]: time=&quot;2019-10-10T13:48:27.700450359+08:00&quot; level=info msg=&quot;Starting up&quot;</span><br><span class="line">Oct 10 13:48:27 node-1.local dockerd[25992]: time=&quot;2019-10-10T13:48:27.701786486+08:00&quot; level=info msg=&quot;parsed scheme: \&quot;unix\&quot;&quot; module=grpc</span><br><span class="line">Oct 10 13:48:27 node-1.local dockerd[25992]: time=&quot;2019-10-10T13:48:27.701818831+08:00&quot; level=info msg=&quot;scheme \&quot;unix\&quot; not registered, fallback to default scheme&quot; module=grpc</span><br><span class="line">Oct 10 13:48:27 node-1.local dockerd[25992]: time=&quot;2019-10-10T13:48:27.701856021+08:00&quot; level=info msg=&quot;ccResolverWrapper: sending update to cc: &#123;[&#123;unix:///run/containerd/containerd.sock 0  &lt;nil&gt;&#125;] &lt;nil&gt;&#125;&quot; module=grpc</span><br><span class="line">Oct 10 13:48:27 node-1.local dockerd[25992]: time=&quot;2019-10-10T13:48:27.701880147+08:00&quot; level=info msg=&quot;ClientConn switching balancer to \&quot;pick_first\&quot;&quot; module=grpc</span><br></pre></td></tr></table></figure>
 
 <p>看不出问题，那就用debug模式启动docker看看</p>
