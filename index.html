@@ -338,6 +338,185 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/golang/golang-map-benchmark/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shaffer John">
+      <meta itemprop="description" content="一只生之无趣死之乏味的丧家之犬">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="朱晓峰">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/golang/golang-map-benchmark/" class="post-title-link" itemprop="url">golang 多种线程安全的map性能比较</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-12 19:32:00 / Modified: 20:18:00" itemprop="dateCreated datePublished" datetime="2020-05-12T19:32:00+08:00">2020-05-12</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang/" itemprop="url" rel="index"><span itemprop="name">golang</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="线程安全的map"><a href="#线程安全的map" class="headerlink" title="线程安全的map"></a>线程安全的map</h1><p>众所周知，go中的map不是线程安全的，两个线程（或协程）同时修改map中同一个key的value，会产生不确定的结果。而在golang中，遇到这种情况，程序会panic退出，个人觉得这样严苛的限制可以迫使开发者明白自己在写什么，以免未来陷入排查并发问题的痛苦之中。</p>
+<p>关于go开发者关于设计非并发安全的map的初衷可以看这里：</p>
+<p><a href="https://blog.golang.org/maps" target="_blank" rel="noopener">Go maps in action</a></p>
+<p><a href="https://golang.org/doc/faq#atomic_maps" target="_blank" rel="noopener">Why are map operations not defined to be atomic?</a></p>
+<p>目前运用比较广泛的有三种线程安全的map实现方法：</p>
+<ul>
+<li><p><code>sync.RWMutex + map</code> 组成<code>struct</code></p>
+</li>
+<li><p><a href="https://golang.org/pkg/sync/#Map" target="_blank" rel="noopener">sync.Map</a></p>
+</li>
+<li><p>一个利用分段锁原理实现的map: <a href="https://github.com/orcaman/concurrent-map" target="_blank" rel="noopener">concurrent-map</a></p>
+</li>
+</ul>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/golang/golang-map-benchmark/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://shaffer.cn/algorithm/algorithm-training-leetcode-151-reverse-words-in-a-string/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -383,13 +562,23 @@
                 
               
 
-              <time title="Created: 2020-05-10 21:03:42 / Modified: 21:54:26" itemprop="dateCreated datePublished" datetime="2020-05-10T21:03:42+08:00">2020-05-10</time>
+              <time title="Created: 2020-05-10 21:03:42" itemprop="dateCreated datePublished" datetime="2020-05-10T21:03:42+08:00">2020-05-10</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-05-12 19:38:39" itemprop="dateModified" datetime="2020-05-12T19:38:39+08:00">2020-05-12</time>
+              </span>
             
           
 
@@ -441,25 +630,18 @@
 
       
         
-          
-            <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">给定一个字符串，逐个翻转字符串中的每个单词。</span><br><span class="line"></span><br><span class="line">示例 1：</span><br><span class="line"></span><br><span class="line">输入: &quot;the sky is blue&quot;</span><br><span class="line">输出: &quot;blue is sky the&quot;</span><br><span class="line">示例 2：</span><br><span class="line"></span><br><span class="line">输入: &quot;  hello world!  &quot;</span><br><span class="line">输出: &quot;world! hello&quot;</span><br><span class="line">解释: 输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。</span><br><span class="line">示例 3：</span><br><span class="line"></span><br><span class="line">输入: &quot;a good   example&quot;</span><br><span class="line">输出: &quot;example good a&quot;</span><br><span class="line">解释: 如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">说明：</span><br><span class="line"></span><br><span class="line">无空格字符构成一个单词。</span><br><span class="line">输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。</span><br><span class="line">如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">进阶：</span><br><span class="line"></span><br><span class="line">请选用 C 语言的用户尝试使用 O(1) 额外空间复杂度的原地解法。</span><br></pre></td></tr></table></figure>
+          <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">给定一个字符串，逐个翻转字符串中的每个单词。</span><br><span class="line"></span><br><span class="line">示例 1：</span><br><span class="line"></span><br><span class="line">输入: &quot;the sky is blue&quot;</span><br><span class="line">输出: &quot;blue is sky the&quot;</span><br><span class="line">示例 2：</span><br><span class="line"></span><br><span class="line">输入: &quot;  hello world!  &quot;</span><br><span class="line">输出: &quot;world! hello&quot;</span><br><span class="line">解释: 输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。</span><br><span class="line">示例 3：</span><br><span class="line"></span><br><span class="line">输入: &quot;a good   example&quot;</span><br><span class="line">输出: &quot;example good a&quot;</span><br><span class="line">解释: 如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">说明：</span><br><span class="line"></span><br><span class="line">无空格字符构成一个单词。</span><br><span class="line">输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。</span><br><span class="line">如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">进阶：</span><br><span class="line"></span><br><span class="line">请选用 C 语言的用户尝试使用 O(1) 额外空间复杂度的原地解法。</span><br></pre></td></tr></table></figure>
 
 <p>Related Topics: <strong>字符串</strong></p>
-<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><h4 id="基础解法"><a href="#基础解法" class="headerlink" title="基础解法"></a>基础解法</h4><p>把单词都找出来，插进数组中，然后倒序再用空格连接</p>
-<p>python的<code>str.split()</code>函数可以分割多个连续的空白字符，具体思路查看<code>解法1</code></p>
-<h4 id="进阶"><a href="#进阶" class="headerlink" title="进阶"></a>进阶</h4><p>根据题意</p>
-<blockquote>
-<p>请选用 C 语言的用户尝试使用 O(1) 额外空间复杂度的原地解法。</p>
-</blockquote>
-<p>思路很简单，先把每个单词都翻转一遍，最后再把整个字符串再翻转一遍。</p>
-<p>我觉得难点是在于考虑边界情况。</p>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><h4 id="解法1"><a href="#解法1" class="headerlink" title="解法1"></a>解法1</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">reverseWords</span><span class="params">(self, s: str)</span> -&gt; str:</span></span><br><span class="line">		<span class="keyword">return</span> <span class="string">" "</span>.join([x.strip() <span class="keyword">for</span> x <span class="keyword">in</span> s.split()][::<span class="number">-1</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># s.split() 分割并合并所有的连续空白字符，相当于取出所有的单词</span></span><br><span class="line"><span class="comment"># x.strip() 将上一步的单词trim一下</span></span><br><span class="line"><span class="comment"># [::-1] 倒序</span></span><br><span class="line"><span class="comment"># " ".join(array) 用空格连接</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="解法2"><a href="#解法2" class="headerlink" title="解法2"></a>解法2</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">reverseWords</span><span class="params">(self, s: str)</span> -&gt; str:</span></span><br><span class="line">		<span class="comment"># python里用数组模拟C语言的字符串会方便许多</span></span><br><span class="line">		s = list(s)</span><br><span class="line"></span><br><span class="line">		length = len(s)</span><br><span class="line">		<span class="keyword">if</span> length == <span class="number">0</span>:</span><br><span class="line">			<span class="keyword">return</span> <span class="string">""</span></span><br><span class="line">		i = <span class="number">0</span> <span class="comment"># 用于遍历s</span></span><br><span class="line">		begin = <span class="number">0</span> <span class="comment"># 单词开始的位置</span></span><br><span class="line">		cur = <span class="number">0</span> <span class="comment"># 遍历过程中，翻转后的字符串保存的位置</span></span><br><span class="line">		<span class="keyword">while</span> i &lt; length:</span><br><span class="line">			<span class="keyword">if</span> s[i] == <span class="string">" "</span>:</span><br><span class="line">				i += <span class="number">1</span></span><br><span class="line">				<span class="keyword">continue</span></span><br><span class="line">			begin = i</span><br><span class="line">			<span class="keyword">while</span> i &lt; length:</span><br><span class="line">				i += <span class="number">1</span></span><br><span class="line">				<span class="keyword">if</span> i &gt;= length <span class="keyword">or</span> s[i] == <span class="string">" "</span>:</span><br><span class="line">					s[cur:cur+(i-begin)] = self.reverse(s[begin:i])</span><br><span class="line">					cur += i-begin</span><br><span class="line">					<span class="keyword">if</span> cur &lt; length:</span><br><span class="line">						s[cur] = <span class="string">" "</span></span><br><span class="line">						cur += <span class="number">1</span></span><br><span class="line">					<span class="keyword">break</span></span><br><span class="line">		<span class="keyword">if</span> cur != <span class="number">0</span> <span class="keyword">and</span> s[cur<span class="number">-1</span>] == <span class="string">" "</span>:</span><br><span class="line">			cur -= <span class="number">1</span></span><br><span class="line">		s = s[<span class="number">0</span>:cur]</span><br><span class="line">		<span class="keyword">return</span> <span class="string">""</span>.join(self.reverse(s))</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">reverse</span><span class="params">(self, s)</span>:</span></span><br><span class="line">		<span class="keyword">for</span> k <span class="keyword">in</span> range(int(len(s)/<span class="number">2</span>)):</span><br><span class="line">			t = s[k]</span><br><span class="line">			s[k] = s[len(s)<span class="number">-1</span>-k]</span><br><span class="line">			s[len(s)<span class="number">-1</span>-k] = t</span><br><span class="line">		<span class="keyword">return</span> s</span><br></pre></td></tr></table></figure>
-
-<p>如果大家有更好的解法，恳请不吝赐教，谢谢！</p>
-
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/algorithm/algorithm-training-leetcode-151-reverse-words-in-a-string/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -559,13 +741,23 @@
                 
               
 
-              <time title="Created: 2020-05-10 10:42:58 / Modified: 21:54:02" itemprop="dateCreated datePublished" datetime="2020-05-10T10:42:58+08:00">2020-05-10</time>
+              <time title="Created: 2020-05-10 10:42:58" itemprop="dateCreated datePublished" datetime="2020-05-10T10:42:58+08:00">2020-05-10</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-05-12 19:38:39" itemprop="dateModified" datetime="2020-05-12T19:38:39+08:00">2020-05-12</time>
+              </span>
             
           
 
@@ -617,23 +809,18 @@
 
       
         
-          
-            <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">字符串的排列</span><br><span class="line"></span><br><span class="line">给定两个字符串 s1 和 s2，写一个函数来判断 s2 是否包含 s1 的排列。</span><br><span class="line"></span><br><span class="line">换句话说，第一个字符串的排列之一是第二个字符串的子串。</span><br><span class="line"></span><br><span class="line">示例1:</span><br><span class="line"></span><br><span class="line">输入: s1 = &quot;ab&quot; s2 = &quot;eidbaooo&quot;</span><br><span class="line">输出: True</span><br><span class="line">解释: s2 包含 s1 的排列之一 (&quot;ba&quot;).</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">示例2:</span><br><span class="line"></span><br><span class="line">输入: s1= &quot;ab&quot; s2 = &quot;eidboaoo&quot;</span><br><span class="line">输出: False</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">注意：</span><br><span class="line"></span><br><span class="line">输入的字符串只包含小写字母</span><br><span class="line">两个字符串的长度都在 [1, 10,000] 之间</span><br></pre></td></tr></table></figure>
+          <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">字符串的排列</span><br><span class="line"></span><br><span class="line">给定两个字符串 s1 和 s2，写一个函数来判断 s2 是否包含 s1 的排列。</span><br><span class="line"></span><br><span class="line">换句话说，第一个字符串的排列之一是第二个字符串的子串。</span><br><span class="line"></span><br><span class="line">示例1:</span><br><span class="line"></span><br><span class="line">输入: s1 = &quot;ab&quot; s2 = &quot;eidbaooo&quot;</span><br><span class="line">输出: True</span><br><span class="line">解释: s2 包含 s1 的排列之一 (&quot;ba&quot;).</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">示例2:</span><br><span class="line"></span><br><span class="line">输入: s1= &quot;ab&quot; s2 = &quot;eidboaoo&quot;</span><br><span class="line">输出: False</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">注意：</span><br><span class="line"></span><br><span class="line">输入的字符串只包含小写字母</span><br><span class="line">两个字符串的长度都在 [1, 10,000] 之间</span><br></pre></td></tr></table></figure>
 
 <p>Related Topics: <strong>字符串</strong> <strong>滑动窗口</strong></p>
-<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>遍历s1所有的排列，判断是否为s2的子串，若是返回<code>true</code>，否则<code>false</code></p>
-<p>显而易见，仅仅是遍历字符串所有的排列，复杂度就已经是<code>O(n!)</code>了，阶乘级别，所以肯定行不通。</p>
-<h4 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h4><p>借鉴<a href="https://shaffer.cn/algorithm/algorithm-training-leetcode-3-longest-substring-without-repeating-characters/">[算法训练]LeetCode 3: 无重复字符的最长子串</a>其中滑动窗口的思想</p>
-<p>首先假设s1的长度 ≤ s2的长度，这样s1才有可能是s2的子串。</p>
-<p>我们构造一个和s1长度相同的窗口，在s2中滑动。</p>
-<p>那现在问题就是：如何快速判断s2窗口内的字符串是否为s1的排列组合之一</p>
-<p>首先长度相同了，那只要两个字符串内的字符种类及其数量都一致，就肯定是排列之一了。</p>
-<p>比如 <code>aab</code> 和 <code>baa</code>， 都是2个<code>a</code>，1个<code>b</code>，<code>aab</code>是<code>baa</code>是排列之一。</p>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">checkInclusion</span><span class="params">(self, s1, s2)</span>:</span></span><br><span class="line">		slot1, slot2 = [<span class="number">0</span>]*<span class="number">26</span>, [<span class="number">0</span>]*<span class="number">26</span></span><br><span class="line">		l1, l2 = len(s1), len(s2)</span><br><span class="line">		<span class="keyword">for</span> c <span class="keyword">in</span> s1:</span><br><span class="line">			slot1[ord(c)<span class="number">-97</span>] += <span class="number">1</span></span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(l2):</span><br><span class="line">			slot2[ord(s2[i])<span class="number">-97</span>] += <span class="number">1</span></span><br><span class="line">			<span class="keyword">if</span> i &gt;= l1:</span><br><span class="line">				slot2[ord(s2[i-l1])<span class="number">-97</span>] -= <span class="number">1</span></span><br><span class="line">			<span class="keyword">if</span> slot1 == slot2:</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
-
-<p>如果大家有更好的解法，恳请不吝赐教，谢谢！</p>
-
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/algorithm/algorithm-training-leetcode-567-permutation-in-string/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -733,13 +920,23 @@
                 
               
 
-              <time title="Created: 2020-05-09 16:42:58 / Modified: 18:10:25" itemprop="dateCreated datePublished" datetime="2020-05-09T16:42:58+08:00">2020-05-09</time>
+              <time title="Created: 2020-05-09 16:42:58" itemprop="dateCreated datePublished" datetime="2020-05-09T16:42:58+08:00">2020-05-09</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-05-12 19:38:39" itemprop="dateModified" datetime="2020-05-12T19:38:39+08:00">2020-05-12</time>
+              </span>
             
           
 
@@ -791,28 +988,18 @@
 
       
         
-          
-            <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">无重复字符的最长子串</span><br><span class="line"></span><br><span class="line">给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。</span><br><span class="line"></span><br><span class="line">示例 1:</span><br><span class="line"></span><br><span class="line">输入: &quot;abcabcbb&quot;</span><br><span class="line">输出: 3</span><br><span class="line">解释: 因为无重复字符的最长子串是 &quot;abc&quot;，所以其长度为 3。</span><br><span class="line">示例 2:</span><br><span class="line"></span><br><span class="line">输入: &quot;bbbbb&quot;</span><br><span class="line">输出: 1</span><br><span class="line">解释: 因为无重复字符的最长子串是 &quot;b&quot;，所以其长度为 1。</span><br><span class="line">示例 3:</span><br><span class="line"></span><br><span class="line">输入: &quot;pwwkew&quot;</span><br><span class="line">输出: 3</span><br><span class="line">解释: 因为无重复字符的最长子串是 &quot;wke&quot;，所以其长度为 3。</span><br><span class="line">     请注意，你的答案必须是 子串 的长度，&quot;pwke&quot; 是一个子序列，不是子串。</span><br></pre></td></tr></table></figure>
+          <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">无重复字符的最长子串</span><br><span class="line"></span><br><span class="line">给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。</span><br><span class="line"></span><br><span class="line">示例 1:</span><br><span class="line"></span><br><span class="line">输入: &quot;abcabcbb&quot;</span><br><span class="line">输出: 3</span><br><span class="line">解释: 因为无重复字符的最长子串是 &quot;abc&quot;，所以其长度为 3。</span><br><span class="line">示例 2:</span><br><span class="line"></span><br><span class="line">输入: &quot;bbbbb&quot;</span><br><span class="line">输出: 1</span><br><span class="line">解释: 因为无重复字符的最长子串是 &quot;b&quot;，所以其长度为 1。</span><br><span class="line">示例 3:</span><br><span class="line"></span><br><span class="line">输入: &quot;pwwkew&quot;</span><br><span class="line">输出: 3</span><br><span class="line">解释: 因为无重复字符的最长子串是 &quot;wke&quot;，所以其长度为 3。</span><br><span class="line">     请注意，你的答案必须是 子串 的长度，&quot;pwke&quot; 是一个子序列，不是子串。</span><br></pre></td></tr></table></figure>
 
 <p>Related Topics: <strong>字符串</strong> <strong>滑动窗口</strong></p>
-<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>惯例，首先思考一下暴力方法，是会超时还是爆内存，再考虑优化的方法。</p>
-<h4 id="暴力方法"><a href="#暴力方法" class="headerlink" title="暴力方法"></a>暴力方法</h4><p>遍历每一个字符a<sub>i</sub>，再往后遍历a<sub>j</sub> ( j &gt; i )，如果存在a<sub>j</sub> = a<sub>k</sub> ( i ≤ k &lt; j )，则比较之前长度的最大值并保存，maxLength = max(maxLength, j - i)</p>
-<p>最坏的情况下，时间复杂度为O(n<sup>3</sup>)</p>
-<h4 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h4><p>很显然，暴力算法做了很多重复工作，比如</p>
-<p><code>abcabcbb</code></p>
-<p>当找到第二个a的时候，我们已经知道这两个a之间的字符<code>b</code> <code>c</code>是没有重复的，所以不用再反复比较了。</p>
-<p>自然而然会想到用滑动窗口的方式来优化。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">abcabcbb → abcabcbb → abcabcbb → abcabcbb</span><br><span class="line">↑↑       → ↑ ↑      → ↑  ↑     →  ↑ ↑    </span><br><span class="line">ij       → i j      → i  j     →  i j</span><br></pre></td></tr></table></figure>
-
-<p>用两个指针i和j，让j开始向后滑动，当出现j指向的内容与前面重复（即a<sub>j</sub> = a<sub>k</sub> ( i ≤ k &lt; j ) ），则将i往后移动一位，在移动过程中<code>j-i</code>的最大值就是答案。</p>
-<p>但是关键是怎么快速判断是否重复，重新审题，字符都是ASCII码，所以可以构造一个长度为256的布尔数组（甚至128就够了），该字符的ASCII码数值则为索引，值用来标记是否已经访问过。</p>
-<p>在j往后移动的过程中，将<code>arr[a[j]]</code>设置为true；</p>
-<p>在i往后移动的过程中，将前一位<code>arr[a[i-1]]</code>设置为false</p>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(self, s)</span>:</span></span><br><span class="line">		a = [<span class="literal">False</span>] * <span class="number">256</span></span><br><span class="line">		length = len(s)</span><br><span class="line">		i, j = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">		res = <span class="number">0</span></span><br><span class="line">		<span class="keyword">while</span> j &lt; length:</span><br><span class="line">			<span class="keyword">if</span> i &lt; j <span class="keyword">and</span> a[ord(s[j])]:</span><br><span class="line">				a[ord(s[i])] = <span class="literal">False</span></span><br><span class="line">				i += <span class="number">1</span></span><br><span class="line">			<span class="keyword">else</span>:</span><br><span class="line">				a[ord(s[j])] = <span class="literal">True</span></span><br><span class="line">				j += <span class="number">1</span></span><br><span class="line">			res = max(res, j - i)</span><br><span class="line">		<span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
-
-<p>如果大家有更好的解法，恳请不吝赐教，谢谢！</p>
-
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/algorithm/algorithm-training-leetcode-3-longest-substring-without-repeating-characters/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -1107,7 +1294,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2020-04-29 14:59:18" itemprop="dateModified" datetime="2020-04-29T14:59:18+08:00">2020-04-29</time>
+                <time title="Modified: 2020-05-12 19:38:39" itemprop="dateModified" datetime="2020-05-12T19:38:39+08:00">2020-05-12</time>
               </span>
             
           
@@ -1160,20 +1347,18 @@
 
       
         
-          
-            <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。 </p>
-<p>示例: </p>
-<p>输入: <code>[-2,1,-3,4,-1,2,1,-5,4]</code></p>
-<p>输出: <code>6</code></p>
-<p>解释: 连续子数组 <code>[4,-1,2,1]</code> 的和最大，为 <code>6</code>。</p>
-<p>进阶: </p>
-<p>如果你已经实现复杂度为 O(n) 的解法，尝试使用更为精妙的分治法求解。 </p>
+          <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">最大子序和</span><br><span class="line"></span><br><span class="line">给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。 </span><br><span class="line"></span><br><span class="line">示例: </span><br><span class="line"></span><br><span class="line">输入: `[-2,1,-3,4,-1,2,1,-5,4]`</span><br><span class="line"></span><br><span class="line">输出: `6`</span><br><span class="line"></span><br><span class="line">解释: 连续子数组 `[4,-1,2,1]` 的和最大，为 `6`。</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">进阶: </span><br><span class="line"></span><br><span class="line">如果你已经实现复杂度为 O(n) 的解法，尝试使用更为精妙的分治法求解。</span><br></pre></td></tr></table></figure>
+
 <p>Related Topics <strong>数组</strong> <strong>分治算法</strong> <strong>动态规划</strong></p>
-<h3 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maxSubArray</span><span class="params">(self, nums)</span>:</span></span><br><span class="line">        <span class="comment"># dp[i] 表示 以第i个数结尾的子数组的最大和</span></span><br><span class="line">        dp = nums</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(nums)):</span><br><span class="line">            dp[i] = max(dp[i], dp[i<span class="number">-1</span>]+nums[i])</span><br><span class="line">        <span class="keyword">return</span> max(dp)</span><br></pre></td></tr></table></figure>
-
-<p>如果大家有更好的解法，恳请不吝赐教，谢谢！</p>
-
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/algorithm/algorithm-training-leetcode-53-maximum-subarray/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -1965,178 +2150,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/qingyou/gitlab-ee-license-crack/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Shaffer John">
-      <meta itemprop="description" content="一只生之无趣死之乏味的丧家之犬">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="朱晓峰">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/qingyou/gitlab-ee-license-crack/" class="post-title-link" itemprop="url">Gitlab ee 许可证破解 Gitlab Enterprise Edition License Crack</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-09-19 17:17:16" itemprop="dateCreated datePublished" datetime="2019-09-19T17:17:16+08:00">2019-09-19</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-04-29 14:59:18" itemprop="dateModified" datetime="2020-04-29T14:59:18+08:00">2020-04-29</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/qingyou/" itemprop="url" rel="index"><span itemprop="name">qingyou</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>version: <code>12.2.5-ee</code></p>
-<p>搞定，挺简单的。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2185,7 +2198,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>

@@ -105,7 +105,7 @@
 <meta property="og:site_name" content="朱晓峰">
 <meta property="og:description" content="题目1234567891011121314151617181920212223字符串的排列给定两个字符串 s1 和 s2，写一个函数来判断 s2 是否包含 s1 的排列。换句话说，第一个字符串的排列之一是第二个字符串的子串。示例1:输入: s1 = &amp;quot;ab&amp;quot; s2 = &amp;quot;eidbaooo&amp;quot;输出: True解释: s2 包含 s1 的排列之一 (&amp;quot;b">
 <meta property="og:locale" content="zh">
-<meta property="og:updated_time" content="2020-05-10T13:54:02.544Z">
+<meta property="og:updated_time" content="2020-05-12T11:38:39.174Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[算法训练]LeetCode 567: 字符串的排列">
 <meta name="twitter:description" content="题目1234567891011121314151617181920212223字符串的排列给定两个字符串 s1 和 s2，写一个函数来判断 s2 是否包含 s1 的排列。换句话说，第一个字符串的排列之一是第二个字符串的子串。示例1:输入: s1 = &amp;quot;ab&amp;quot; s2 = &amp;quot;eidbaooo&amp;quot;输出: True解释: s2 包含 s1 的排列之一 (&amp;quot;b">
@@ -381,13 +381,23 @@
                 
               
 
-              <time title="Created: 2020-05-10 10:42:58 / Modified: 21:54:02" itemprop="dateCreated datePublished" datetime="2020-05-10T10:42:58+08:00">2020-05-10</time>
+              <time title="Created: 2020-05-10 10:42:58" itemprop="dateCreated datePublished" datetime="2020-05-10T10:42:58+08:00">2020-05-10</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-05-12 19:38:39" itemprop="dateModified" datetime="2020-05-12T19:38:39+08:00">2020-05-12</time>
+              </span>
             
           
 
@@ -441,6 +451,8 @@
         <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">字符串的排列</span><br><span class="line"></span><br><span class="line">给定两个字符串 s1 和 s2，写一个函数来判断 s2 是否包含 s1 的排列。</span><br><span class="line"></span><br><span class="line">换句话说，第一个字符串的排列之一是第二个字符串的子串。</span><br><span class="line"></span><br><span class="line">示例1:</span><br><span class="line"></span><br><span class="line">输入: s1 = &quot;ab&quot; s2 = &quot;eidbaooo&quot;</span><br><span class="line">输出: True</span><br><span class="line">解释: s2 包含 s1 的排列之一 (&quot;ba&quot;).</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">示例2:</span><br><span class="line"></span><br><span class="line">输入: s1= &quot;ab&quot; s2 = &quot;eidboaoo&quot;</span><br><span class="line">输出: False</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">注意：</span><br><span class="line"></span><br><span class="line">输入的字符串只包含小写字母</span><br><span class="line">两个字符串的长度都在 [1, 10,000] 之间</span><br></pre></td></tr></table></figure>
 
 <p>Related Topics: <strong>字符串</strong> <strong>滑动窗口</strong></p>
+<a id="more"></a>
+
 <h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>遍历s1所有的排列，判断是否为s2的子串，若是返回<code>true</code>，否则<code>false</code></p>
 <p>显而易见，仅仅是遍历字符串所有的排列，复杂度就已经是<code>O(n!)</code>了，阶乘级别，所以肯定行不通。</p>
 <h4 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h4><p>借鉴<a href="https://shaffer.cn/algorithm/algorithm-training-leetcode-3-longest-substring-without-repeating-characters/">[算法训练]LeetCode 3: 无重复字符的最长子串</a>其中滑动窗口的思想</p>
@@ -578,7 +590,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
