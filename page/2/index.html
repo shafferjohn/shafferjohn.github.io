@@ -338,6 +338,182 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/qingyou/migrate-from-gogs-to-gitlab/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shaffer John">
+      <meta itemprop="description" content="一只生之无趣死之乏味的丧家之犬">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="朱晓峰">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/qingyou/migrate-from-gogs-to-gitlab/" class="post-title-link" itemprop="url">从Gogs迁移至Gitlab</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-09-19 18:12:22" itemprop="dateCreated datePublished" datetime="2019-09-19T18:12:22+08:00">2019-09-19</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-04-29 14:59:18" itemprop="dateModified" datetime="2020-04-29T14:59:18+08:00">2020-04-29</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/qingyou/" itemprop="url" rel="index"><span itemprop="name">qingyou</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>团队创立初期，我们调研了一下当时市面上的代码管理平台，github、gitlab、gogs等，最后我们选择了免费开源的gogs，当时可以满足我们的需要，不过如今团队不断壮大，人丁兴旺，但是测试、部署、上线的流程还是比较原始，虽然写了一些脚本并用webhook触发，但管理起来比较麻烦。</p>
+<p>我们用了gogs也有两年了，ci一直是个问题，虽然gogs也有解决方案，但感觉集成度不高，所以考量了一下，决定将团队从gogs迁移至gitlab，首先解决gitlab license的问题，在上一篇博文中已经搞定了。</p>
+<p>接下来就是要把gogs的数据迁移到gitlab，这边写了个脚本<a href="https://github.com/shafferjohn/migrate-gogs-to-gitlab" target="_blank" rel="noopener">https://github.com/shafferjohn/migrate-gogs-to-gitlab</a></p>
+<p>就是先迁移用户，然后group我手动创建了，再创建project，最后迁移repo。</p>
+<p>后来发现，git push –mirror时候，gitlab会自动创建project。</p>
+<p>现在团队用上了gitlab，可以更愉快地玩耍了（逃 &gt;.&lt;</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://shaffer.cn/qingyou/gitlab-ee-license-crack/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -888,7 +1064,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-count">14</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -948,7 +1124,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">12</span>
+                      
+                    
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">tags</span>
                   
                 </div>

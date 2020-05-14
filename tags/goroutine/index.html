@@ -97,18 +97,17 @@
 
 
 
-  <meta name="description" content="最近一直在学习golang，本文是对于golang中map的实现原理的一次初探，我个人觉得原理比具体代码实现更有价值，所以主要探究原理，如有错误，敬请斧正。 本文基于go 1.14.2版本 是什么Map本文所讨论的Map是一种key-value键值对的存储结构，其中key是不能重复的。 实现的关键是哈希表，hash表的输入一般都大于输出，所以要解决冲突。">
-<meta name="keywords" content="golang,map">
-<meta property="og:type" content="article">
-<meta property="og:title" content="golang map 实现原理初探">
-<meta property="og:url" content="https://shaffer.cn/golang/golang-map-touch/index.html">
+  <meta name="description" content="一只生之无趣死之乏味的丧家之犬">
+<meta name="keywords" content="朱晓峰,Shaffer John,博客">
+<meta property="og:type" content="website">
+<meta property="og:title" content="朱晓峰">
+<meta property="og:url" content="https://shaffer.cn/tags/goroutine/index.html">
 <meta property="og:site_name" content="朱晓峰">
-<meta property="og:description" content="最近一直在学习golang，本文是对于golang中map的实现原理的一次初探，我个人觉得原理比具体代码实现更有价值，所以主要探究原理，如有错误，敬请斧正。 本文基于go 1.14.2版本 是什么Map本文所讨论的Map是一种key-value键值对的存储结构，其中key是不能重复的。 实现的关键是哈希表，hash表的输入一般都大于输出，所以要解决冲突。">
+<meta property="og:description" content="一只生之无趣死之乏味的丧家之犬">
 <meta property="og:locale" content="zh">
-<meta property="og:updated_time" content="2020-05-09T02:15:58.436Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="golang map 实现原理初探">
-<meta name="twitter:description" content="最近一直在学习golang，本文是对于golang中map的实现原理的一次初探，我个人觉得原理比具体代码实现更有价值，所以主要探究原理，如有错误，敬请斧正。 本文基于go 1.14.2版本 是什么Map本文所讨论的Map是一种key-value键值对的存储结构，其中key是不能重复的。 实现的关键是哈希表，hash表的输入一般都大于输出，所以要解决冲突。">
+<meta name="twitter:title" content="朱晓峰">
+<meta name="twitter:description" content="一只生之无趣死之乏味的丧家之犬">
 
 
 
@@ -116,7 +115,7 @@
 
   
   
-  <link rel="canonical" href="https://shaffer.cn/golang/golang-map-touch/">
+  <link rel="canonical" href="https://shaffer.cn/tags/goroutine/">
 
 
 
@@ -126,7 +125,7 @@
   };
 </script>
 
-  <title>golang map 实现原理初探 | 朱晓峰</title>
+  <title>Tag: goroutine | 朱晓峰</title>
   
 
 
@@ -174,7 +173,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -277,6 +276,22 @@
   
     
 
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
   
 
   
@@ -322,300 +337,57 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
+  
+  
+  
+  <div class="post-block tag">
 
-  
+    <div id="posts" class="posts-collapse">
+      <div class="collection-title">
+        <h1>goroutine<small>Tag</small>
+        </h1>
+      </div>
 
-  
-  
-  
-
-  
+      
+        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/golang/golang-map-touch/">
+    <header class="post-header">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Shaffer John">
-      <meta itemprop="description" content="一只生之无趣死之乏味的丧家之犬">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="朱晓峰">
-    </span>
-
-    
-      <header class="post-header">
-
+      <h2 class="post-title">
         
+          <a class="post-title-link" href="/golang/golang-goroutine-schedule/" itemprop="url">
+            
+              <span itemprop="name">Goroutine 调度浅析</span>
+            
+          </a>
         
-          <h1 class="post-title" itemprop="name headline">golang map 实现原理初探
+      </h2>
 
-              
-            
-          </h1>
-        
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2020-05-14T15:14:39+08:00" content="2020-05-14">
+          05-14
+        </time>
+      </div>
 
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-04-29 15:14:17" itemprop="dateCreated datePublished" datetime="2020-04-29T15:14:17+08:00">2020-04-29</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-05-09 10:15:58" itemprop="dateModified" datetime="2020-05-09T10:15:58+08:00">2020-05-09</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang/" itemprop="url" rel="index"><span itemprop="name">golang</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>最近一直在学习golang，本文是对于golang中map的实现原理的一次初探，我个人觉得原理比具体代码实现更有价值，所以主要探究原理，如有错误，敬请斧正。</p>
-<p>本文基于go <code>1.14.2</code>版本</p>
-<h3 id="是什么Map"><a href="#是什么Map" class="headerlink" title="是什么Map"></a>是什么Map</h3><p>本文所讨论的Map是一种key-value键值对的存储结构，其中key是不能重复的。</p>
-<p>实现的关键是哈希表，hash表的输入一般都大于输出，所以要解决冲突。</p>
-<a id="more"></a>
-
-<h3 id="冲突解决方法"><a href="#冲突解决方法" class="headerlink" title="冲突解决方法"></a>冲突解决方法</h3><ol>
-<li><p>开放定址法</p>
-<p> 如果算出来的hash值所在的数组元素不为空，那就往这个数组后面继续找空的位置，找的方式又有几种常见方式：</p>
-<ol>
-<li><p>线性探测法</p>
-<p> 顺序往后找空的位置，到最后一位就从头开始，如果都没有，那就返回数组已满，插入失败。实际上再快满的时候就应该扩容了。</p>
-<p> 数组长度为p，步长为1，索引位置的迭代式是 <code>i = (i + 1) % p</code></p>
-</li>
-<li><p>线性补偿探测法</p>
-<p> 找一个和数组长度p互质的q，然后根据上述的迭代式，步长为q，索引位置的迭代式为 <code>i = (i + q) / p</code></p>
-<p> <code>p</code>与<code>q</code>互质就保证了可以探测到数组中的每一个元素</p>
-</li>
-<li><p>随机探测</p>
-<p> 将步长又常数改为随机数，生成一个随机数序列R，</p>
-<p> i = ( i + R<sub>j</sub> ) % p</p>
-</li>
-<li><p>二次探测再散列法</p>
-<p> 冲突，就再做一次hash</p>
-</li>
-</ol>
-</li>
-<li><p>拉链法</p>
-<p> 当产生冲突时，在该位置延伸出一个链表用来存储value。相比于开放地址法，用链表的方法仅会在相同hash值的地方出现链表，而其他不冲突的地方，可以快速查找到，所以总体的平均查找长度比较短。缺点也显而易见，因为用链表，所以需要额外存储指针的空间，而且内存地址不一定连续。</p>
-<p> 比如你有很多标有序号和不同颜色的珠子，面前有8个桶，每个桶里有一根绳子，你按照珠子的序号找到对应的桶，把珠子串到桶里的绳子上。珠子的序号和颜色（作为key），珠子本身作为value。当你要查找珠子的时候，根据序号找到桶，再沿着绳子一个一个找颜色匹配的珠子。</p>
-<p> 如果哈希表本身长度不大，即桶的数量不多，但是延伸出来的链表很长的话，查找性能依旧是很差的，所以引入一个指标来衡量：负载因子（loadFactor）</p>
-<p> <code>负载因子 = 填入散列表中的元素个数 / 桶的数量</code></p>
-<p> 也就是该哈希表中链表的平均长度</p>
-<p> golang会在loadFactor &gt; 6.5的时候对桶的数量进行扩容，以保证查找性能</p>
-</li>
-</ol>
-<h3 id="Map的实现关键原理"><a href="#Map的实现关键原理" class="headerlink" title="Map的实现关键原理"></a>Map的实现关键原理</h3><h4 id="hash函数选择"><a href="#hash函数选择" class="headerlink" title="hash函数选择"></a>hash函数选择</h4><p>一般来说，k-v结构都需要将key进行hash，然后取模最终确定其在底层数据结构里的位置。</p>
-<ul>
-<li><p>java是利用<code>hashCode()</code>和<code>hash()</code>来确定元素的位置的</p>
-</li>
-<li><p>golang分两种情况：如果cpu支持aes，则使用aes hash，否则使用memhash，而memhash是参考xxhash、cityhash实现的，性能非常好</p>
-<blockquote>
-<p>// runtime variable to check if the processor we’re running on</p>
-<p>// actually supports the instructions used by the AES-based</p>
-<p>// hash implementation.</p>
-</blockquote>
-<p>  更多hash函数性能对比可以参考：<a href="http://aras-p.info/blog/2016/08/09/More-Hash-Function-Tests/" target="_blank" rel="noopener">More-Hash-Function-Tests</a></p>
-</li>
-</ul>
-<h4 id="底层结构"><a href="#底层结构" class="headerlink" title="底层结构"></a>底层结构</h4><h5 id="hmap"><a href="#hmap" class="headerlink" title="hmap"></a>hmap</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// A header for a Go map.</span></span><br><span class="line"><span class="keyword">type</span> hmap <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// Note: the format of the hmap is also encoded in cmd/compile/internal/gc/reflect.go.</span></span><br><span class="line">	<span class="comment">// Make sure this stays in sync with the compiler's definition.</span></span><br><span class="line">	count     <span class="keyword">int</span>    <span class="comment">// 元素的个数 # live cells == size of map.  Must be first (used by len() builtin)</span></span><br><span class="line">	flags     <span class="keyword">uint8</span>  <span class="comment">// 用来标记状态</span></span><br><span class="line">	B         <span class="keyword">uint8</span>  <span class="comment">// 代表有2^B个桶 log_2 of # of buckets (can hold up to loadFactor * 2^B items)</span></span><br><span class="line">	noverflow <span class="keyword">uint16</span> <span class="comment">// approximate number of overflow buckets; see incrnoverflow for details</span></span><br><span class="line">	<span class="comment">// noverflow是溢出桶的数量，当B&lt;16时，为精确值</span></span><br><span class="line">	<span class="comment">// 当B&gt;=16时，为估计值</span></span><br><span class="line">	hash0     <span class="keyword">uint32</span> <span class="comment">// hash种子 hash seed</span></span><br><span class="line">	buckets    unsafe.Pointer <span class="comment">// 桶的地址 array of 2^B Buckets. may be nil if count==0.</span></span><br><span class="line">	oldbuckets unsafe.Pointer <span class="comment">// 旧桶的地址，用于扩容 previous bucket array of half the size, non-nil only when growing</span></span><br><span class="line">	nevacuate  <span class="keyword">uintptr</span>        <span class="comment">// 搬迁进度，扩容需要将旧数据搬迁至新数据，这里是利用指针来比较判断有没有迁移 progress counter for evacuation (buckets less than this have been evacuated)</span></span><br><span class="line"></span><br><span class="line">	extra *mapextra <span class="comment">// optional fields</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>不论是c++、java还是golang，hashmap的实现里桶的数量一般都是2的整数幂，2^B，因为这样可以避免取模运算：</p>
-<p>设hash后的值为n，桶的数量m=2^B</p>
-<p>则有 <code>n mod m = n &amp; (m - 1)</code></p>
-<p>利用位运算代替昂贵的取模运算是常见的优化方法</p>
-<h5 id="bmap"><a href="#bmap" class="headerlink" title="bmap"></a>bmap</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// A bucket for a Go map.</span></span><br><span class="line"><span class="keyword">type</span> bmap <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// tophash generally contains the top byte of the hash value</span></span><br><span class="line">	<span class="comment">// for each key in this bucket. If tophash[0] &lt; minTopHash,</span></span><br><span class="line">	<span class="comment">// tophash[0] is a bucket evacuation state instead.</span></span><br><span class="line">	tophash [bucketCnt]<span class="keyword">uint8</span></span><br><span class="line">	<span class="comment">// Followed by bucketCnt keys and then bucketCnt elems.</span></span><br><span class="line">	<span class="comment">// <span class="doctag">NOTE:</span> packing all the keys together and then all the elems together makes the</span></span><br><span class="line">	<span class="comment">// code a bit more complicated than alternating key/elem/key/elem/... but it allows</span></span><br><span class="line">	<span class="comment">// us to eliminate padding which would be needed for, e.g., map[int64]int8.</span></span><br><span class="line">	<span class="comment">// Followed by an overflow pointer.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>bmap</code>就是上文一直说的桶，即bucket的实际结构</p>
-<p>这里只显示定义了一个<code>tophash</code>，实际上里面还存了k/v和overflow，由于k/v字节长度不定，所以需要编译器来优化，不能在这边显示定义。</p>
-<p>go在使用hash值的时候很有意思，会把hash的二进制值一分为二，低位用于寻找当前<code>key</code>属于<code>hmap</code>中的哪个<code>bucket</code>，而高位用于寻找<code>bucket</code>中的哪个<code>key</code></p>
-<h3 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h3><p><code>bucket</code>的链表越来越长，性能会退化，那么就要进行扩容，扩大bucket的数量。</p>
-<p>当 <code>元素个数/bucket</code> 即loadFactor大于等于6.5时，就会进行扩容，把bucket数量扩成原本的两倍，当hash表扩容之后，需要将那些老数据迁移到新table上(源代码中称之为evacuate)， 数据搬迁不是一次性完成，而是逐步的完成（在assign（即赋值）和remove时进行搬移），这样就分摊了扩容的耗时。同时为了避免有个bucket一直访问不到导致扩容无法完成，还会进行一个顺序扩容，每次因为写操作搬迁对应bucket后，还会按顺序搬迁未搬迁的bucket，所以最差情况下n次写操作，就保证搬迁完大小为n的map。</p>
-<p>扩容会建立一个大小是原来2倍的新的表，将旧的<code>bucket</code>搬到新的表中之后，并不会将旧的<code>bucket</code>从<code>oldbucket</code>中删除，而是加上一个已删除的标记。</p>
-<p>只有当所有的<code>bucket</code>都从旧表移到新表之后，才会将<code>oldbucket</code>释放掉。如果扩容过程中，阈值又超了呢？如果正在扩容，那么不会再进行扩容。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// If we hit the max load factor or we have too many overflow buckets,</span></span><br><span class="line"><span class="comment">// and we're not already in the middle of growing, start growing.</span></span><br><span class="line"><span class="keyword">if</span> !h.growing() &amp;&amp; (overLoadFactor(h.count+<span class="number">1</span>, h.B) || tooManyOverflowBuckets(h.noverflow, h.B)) &#123;</span><br><span class="line">	hashGrow(t, h)</span><br><span class="line">	<span class="keyword">goto</span> again <span class="comment">// Growing the table invalidates everything, so try again</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h3><p>将hash值一分为二，低位用于查找bucket，高位用于查找bucket中的key，分库分表也是这种这思想，尽可能快地缩小需要查找的数据量。</p>
-<p>key-value在bmap中的实际存储顺序不是通常理解的<code>k1v1k2v2k3v3……</code>，而是<code>k1k2……k8v1v2……v8</code>，不用kv交替的顺序存储，而是k堆一块，v堆一块，这样可以更有效地利用内存对齐带来的性能提升。</p>
-<p>如果key或者value的小于128字节，则会直接存储在bmap里，否则会存储指针</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Maximum key or elem size to keep inline (instead of mallocing per element).</span></span><br><span class="line"><span class="comment">// Must fit in a uint8.</span></span><br><span class="line"><span class="comment">// Fast versions cannot handle big elems - the cutoff size for</span></span><br><span class="line"><span class="comment">// fast versions in cmd/compile/internal/gc/walk.go must be at most this elem.</span></span><br><span class="line">maxKeySize  = <span class="number">128</span></span><br><span class="line">maxElemSize = <span class="number">128</span></span><br></pre></td></tr></table></figure>
-
-<p>java和go是用桶加链表的思想来实现hashmap的，但是java在链表达到一定长度时，会用红黑树来优化查询速度。</p>
-<p>go的map出现冲突时，<strong>不会</strong>单独再申请一个value的结构，然后通过链表串起来，而是当bmap中的value数量大于8个，就申请一个新的bmap挂在前一个bmap的overflow里。这种可以显著减少对象的数量，减轻内存管理的压力，对gc友好。而且在创建map时，会预先分配一些overflow bucket。但问题就是，目前go还不会shrink空的bmap，所以即使用delete删除掉map中的kv，也不会被gc回收，导致内存泄漏。</p>
-<p>所以需要针对于一个特殊的场景进行特殊扩容，当我们持续向map中插入数据并将它们全部删除时，如果map中的数据量没有超过阈值，就会不断积累溢出桶造成缓慢的内存泄漏。<a href="https://github.com/golang/go/commit/9980b70cb460f27907a003674ab1b9bea24a847c" target="_blank" rel="noopener">runtime: limit the number of map overflow buckets</a> 引入了<code>sameSizeGrow</code>通过重用已有的哈希扩容机制，一旦map中出现了过多的溢出桶，它就会创建新桶保存数据，gc会清理老的溢出桶并释放内存。</p>
-<h3 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h3><ul>
-<li><p><a href="https://aimuke.github.io/go/2019/05/16/map" target="_blank" rel="noopener">剖析golang map的实现</a></p>
-</li>
-<li><p><a href="https://blog.yiz96.com/golang-map/" target="_blank" rel="noopener">golang map源码详解</a></p>
-</li>
-<li><p><a href="https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-hashmap" target="_blank" rel="noopener">Go 语言设计与实现 哈希表</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/q5706503/article/details/85114159" target="_blank" rel="noopener">深入理解 hashcode() 和 HashMap 中的hash 算法</a></p>
-</li>
-<li><p><a href="https://juejin.im/post/5c020b145188250e8601f2a2" target="_blank" rel="noopener">Java HashMap和Go map源码对比</a></p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-        
-          
-        
-        <div class="post-tags">
-          
-            <a href="/tags/golang/" rel="tag"># golang</a>
-          
-            <a href="/tags/map/" rel="tag"># map</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/algorithm/algorithm-training-leetcode-53-maximum-subarray/" rel="next" title="[算法训练]LeetCode 53: 最大子序和">
-                <i class="fa fa-chevron-left"></i> [算法训练]LeetCode 53: 最大子序和
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/algorithm/algorithm-training-leetcode-3-longest-substring-without-repeating-characters/" rel="prev" title="[算法训练]LeetCode 3: 无重复字符的最长子串">
-                [算法训练]LeetCode 3: 无重复字符的最长子串 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
+    </header>
   </article>
 
 
+      
+    </div>
+
   </div>
+  
+  
+  
+
+  
+
 
 
           </div>
           
-
-  
-    <div class="comments" id="gitalk-container">
-    </div>
-
-  
-
-
 
         </div>
         
@@ -635,17 +407,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
 
-      <div class="site-overview-wrap sidebar-panel">
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -786,23 +549,6 @@
       </div>
 
       
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#是什么Map"><span class="nav-number">1.</span> <span class="nav-text">是什么Map</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#冲突解决方法"><span class="nav-number">2.</span> <span class="nav-text">冲突解决方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Map的实现关键原理"><span class="nav-number">3.</span> <span class="nav-text">Map的实现关键原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#hash函数选择"><span class="nav-number">3.1.</span> <span class="nav-text">hash函数选择</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#底层结构"><span class="nav-number">3.2.</span> <span class="nav-text">底层结构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#hmap"><span class="nav-number">3.2.1.</span> <span class="nav-text">hmap</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#bmap"><span class="nav-number">3.2.2.</span> <span class="nav-text">bmap</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩容"><span class="nav-number">4.</span> <span class="nav-text">扩容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#性能优化"><span class="nav-number">5.</span> <span class="nav-text">性能优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文章"><span class="nav-number">6.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
-            
-
-          </div>
-        </div>
-      <!--/noindex-->
-      
 
       
 
@@ -932,10 +678,6 @@
 
 
   
-  <script src="/js/scrollspy.js?v=7.1.2"></script>
-<script src="/js/post-details.js?v=7.1.2"></script>
-
-
 
   
 
@@ -951,37 +693,6 @@
 
   
 
-
-  
-    
-
-<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
-
-
-
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
-
-
-
-<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
-
-<script>
-  var gitalk = new Gitalk({
-    clientID: '2fb1d41262f7e6a9a807',
-    clientSecret: 'bbe0cb7ddb171c539aebed10008ffebbb335d007',
-    repo: 'shafferjohn.github.io',
-    owner: 'shafferjohn',
-    admin: ['shafferjohn'],
-    id: md5(location.pathname),
-    
-      language: window.navigator.language || window.navigator.userLanguage,
-    
-    distractionFreeMode: 'true'
-  });
-  gitalk.render('gitalk-container');
-</script>
-
-  
 
 
   
