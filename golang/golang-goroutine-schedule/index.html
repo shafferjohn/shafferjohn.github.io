@@ -108,7 +108,7 @@
 <meta property="og:image" content="https://shaffer.cn/images/gopher_complex.jpg">
 <meta property="og:image" content="https://shaffer.cn/images/gopher_simple.jpg">
 <meta property="og:image" content="https://shaffer.cn/images/goroutine_scheduler_model.png">
-<meta property="og:updated_time" content="2020-05-14T10:18:19.403Z">
+<meta property="og:updated_time" content="2020-05-14T10:23:55.115Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Goroutine 调度浅析">
 <meta name="twitter:description" content="Goroutine是什么众所周知，操作系统拥有进程和线程，进程是资源分配的最小单位，线程是CPU调度的最小单位，协程是比线程更小的一种执行单元，blablabla这些都太理论了。 就拿我们日常使用电脑的例子来说明，打开浏览器程序，就是创建了一个新进程，打开三个网页标签页，就是在这个进程下创建了三个线程。 为了更好地说明协程，先举个简单的例子，假设现在有一个煤矿厂，里面有一条工作流水线：挖煤 -&amp;g">
@@ -385,7 +385,7 @@
                 
               
 
-              <time title="Created: 2020-05-14 15:14:39 / Modified: 18:18:19" itemprop="dateCreated datePublished" datetime="2020-05-14T15:14:39+08:00">2020-05-14</time>
+              <time title="Created: 2020-05-14 15:14:39 / Modified: 18:23:55" itemprop="dateCreated datePublished" datetime="2020-05-14T15:14:39+08:00">2020-05-14</time>
             </span>
           
 
@@ -488,7 +488,7 @@
 </tr>
 </tbody></table>
 <p>简单来说，进程、线程、协程三者创建所耗费的资源是逐渐降低的，所以可以用更小的粒度控制程序和更少的切换时带来的消耗。</p>
-<h3 id="Goroutine"><a href="#Goroutine" class="headerlink" title="Goroutine"></a>Goroutine</h3><p>Goroutine是一个简单的模型：它是一个函数，与其他Goroutines并发执行且共享相同地址空间。Goroutines的通常用法是根据需要创建成百上千甚至上万的Goroutines。这种用法对于那些习惯了使用C++或Java的程序员来讲可能会有些奇怪。创建这么多goroutines势必要付出不菲的代价？一个操作系统线程使用固定大小的内存作为它的执行栈，当线程数增多时，线程间切换的代价也是相当的高。这也是每处理一个request就创建一个新线程的服务程序方案被诟病的原因。</p>
+<h3 id="Goroutine"><a href="#Goroutine" class="headerlink" title="Goroutine"></a>Goroutine</h3><p>Go的Goroutine是用户级的线程。同样是4个Goroutine，可能只对应了2个内核级线程。Goroutine调度器把4个Goroutine分配到2个内核级线程上，而这两个内核级线程对CPU的使用由内核线程调度器来分配。</p>
 <p>由于线程可以由操作系统调度管理，而goroutine是user-level下的，所以只能由Go runtime自己负责goroutine的调度。Goroutines的调度是协作式的，而线程不是。这意味着每次一个线程发生切换，都需要保存/恢复所有寄存器，包括16个通用寄存器、PC(程序计数器）、SP（栈指针）、段寄存器(segment register)、16个XMM寄存器、FP协处理器状态、X AVX寄存器以及所有MSR等。而当另一个Goroutine被调度时，只需要保存/恢复三个寄存器，分别是PC、SP和DX。Go调度器和任何现代操作 系统的调度器都是O(1)复杂度的，这意味着增加线程/goroutines的数量不会增加切换时间，但改变寄存器的代价是不可忽视的。</p>
 <h1 id="Goroutine调度模型"><a href="#Goroutine调度模型" class="headerlink" title="Goroutine调度模型"></a>Goroutine调度模型</h1><p><img src="/images/goroutine_scheduler_model.png" alt="goroutine调度模型"></p>
 <p>P是一个“逻辑 Proccessor”，每个G要想真正运行起来，首先需要被分配一个P（进入到 P 的 <code>local runq</code> 中，这里暂忽略 <code>global runq</code> 那个环节）。对于 G 来说，P 就是运行它的 “CPU”，可以说：G 的眼里只有 P。但从 Go scheduler 视角来看，真正的 “CPU” 是 M，只有将 P 和 M 绑定才能让 P 的 runq 中 G 得以真实运行起来。这样的 P 与 M 的关系，就好比 Linux 操作系统调度层面用户线程 (user thread) 与核心线程 (kernel thread) 的对应关系那样，都是 （n × m） 模型。具体来说：</p>
