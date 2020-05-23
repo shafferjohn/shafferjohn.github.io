@@ -338,6 +338,261 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/algorithm/algorithm-training-leetcode-simple-linked-list/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shaffer John">
+      <meta itemprop="description" content="一只生之无趣死之乏味的丧家之犬">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="朱晓峰">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/algorithm/algorithm-training-leetcode-simple-linked-list/" class="post-title-link" itemprop="url">[算法训练]LeetCode: 一些简单的单链表算法题</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-23 18:04:46 / Modified: 19:01:54" itemprop="dateCreated datePublished" datetime="2020-05-23T18:04:46+08:00">2020-05-23</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/algorithm/" itemprop="url" rel="index"><span itemprop="name">algorithm</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>闲来无聊，做一些简单的单链表题</p>
+<p>题目链接如下：</p>
+<ul>
+<li><p><a href="https://leetcode-cn.com/problems/reverse-linked-list/" target="_blank" rel="noopener">206. 反转链表</a></p>
+</li>
+<li><p><a href="https://leetcode-cn.com/problems/linked-list-cycle/" target="_blank" rel="noopener">141. 环形链表</a></p>
+</li>
+<li><p><a href="https://leetcode-cn.com/problems/linked-list-cycle-ii/" target="_blank" rel="noopener">142. 环形链表 II</a></p>
+</li>
+<li><p><a href="https://leetcode-cn.com/problems/middle-of-the-linked-list/" target="_blank" rel="noopener">876. 链表的中间结点</a></p>
+</li>
+<li><p><a href="https://leetcode-cn.com/problems/merge-two-sorted-lists/" target="_blank" rel="noopener">21. 合并两个有序链表</a></p>
+</li>
+</ul>
+<h1 id="206-反转链表"><a href="#206-反转链表" class="headerlink" title="206. 反转链表"></a>206. 反转链表</h1><h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><blockquote>
+<p>反转一个单链表。</p>
+<p>示例:</p>
+<p>输入: 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULL</p>
+<p>输出: 5-&gt;4-&gt;3-&gt;2-&gt;1-&gt;NULL</p>
+<p>进阶:</p>
+<p>你可以迭代或递归地反转链表。你能否用两种方法解决这道题？</p>
+</blockquote>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>先定义一个新链表<code>new_list</code>，指针<code>cur</code>用于遍历</p>
+<p>反转本质就是：</p>
+<ol>
+<li><p>将<code>cur</code>的下一个节点连接到<code>new_list</code>，即<code>cur.next=new_list</code></p>
+</li>
+<li><p>再将<code>new_list</code>赋值为<code>cur</code></p>
+</li>
+<li><p>然后将<code>cur</code>赋值为<strong>原本</strong><code>cur.next</code>，并回到第一步继续遍历</p>
+</li>
+</ol>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">reverseList</span><span class="params">(self, head: ListNode)</span> -&gt; ListNode:</span></span><br><span class="line">        new_list = <span class="literal">None</span></span><br><span class="line">        cur = head</span><br><span class="line">        <span class="keyword">while</span> cur != <span class="literal">None</span>:</span><br><span class="line">            tmp = cur.next</span><br><span class="line">            cur.next = new_list</span><br><span class="line">            new_list = cur</span><br><span class="line">            cur = tmp</span><br><span class="line">        <span class="keyword">return</span> new_list</span><br></pre></td></tr></table></figure>
+
+<h1 id="141-环形链表"><a href="#141-环形链表" class="headerlink" title="141. 环形链表"></a>141. 环形链表</h1><h3 id="题目-1"><a href="#题目-1" class="headerlink" title="题目"></a>题目</h3><blockquote>
+<p>给定一个链表，判断链表中是否有环。</p>
+<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。</p>
+<p>示例 1：</p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist.png" alt></p>
+<p>示例 2：</p>
+<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test2.png" alt></p>
+<p>示例 3：</p>
+<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
+<p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test3.png" alt></p>
+<p>进阶：</p>
+<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
+</blockquote>
+<h3 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h3><p>检测单链表中是否有环，经典问题了，定义步长不同的两个指针，慢指针每次走一步，快指针每次走两步，如果有环，它们一定会相遇。</p>
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">hasCycle</span><span class="params">(self, head: ListNode)</span> -&gt; bool:</span></span><br><span class="line">        <span class="keyword">if</span> head <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> head.next <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        slow = head</span><br><span class="line">        fast = head.next</span><br><span class="line">        <span class="keyword">while</span> slow != fast:</span><br><span class="line">            <span class="keyword">if</span> fast.next <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> fast.next.next <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                fast = fast.next.next</span><br><span class="line">                slow = slow.next</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="142-环形链表-II"><a href="#142-环形链表-II" class="headerlink" title="142. 环形链表 II"></a>142. 环形链表 II</h1><h3 id="题目-2"><a href="#题目-2" class="headerlink" title="题目"></a>题目</h3><blockquote>
+<p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
+<p> 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。</p>
+<p> 说明：不允许修改给定的链表。</p>
+<p> 示例 1：</p>
+<p> 输入：head = [3,2,0,-4], pos = 1<br> 输出：tail connects to node index 1<br> 解释：链表中有一个环，其尾部连接到第二个节点。<br> <img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist.png" alt></p>
+<p> 示例 2：</p>
+<p> 输入：head = [1,2], pos = 0<br> 输出：tail connects to node index 0<br> 解释：链表中有一个环，其尾部连接到第一个节点。<br> <img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test2.png" alt></p>
+<p> 示例 3：</p>
+<p> 输入：head = [1], pos = -1<br> 输出：no cycle<br> 解释：链表中没有环。</p>
+<p> <img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test3.png" alt></p>
+</blockquote>
+<h3 id="思路-2"><a href="#思路-2" class="headerlink" title="思路"></a>思路</h3><p>先给结论，在上一题中，我们引入了快慢指针，在它们相遇的时候，慢指针并没有遍历完链表，所以再设置一个指针从链表头部开始遍历，这两个指针相遇的点，就是链表环的入口。</p>
+<p><img src="/images/linked_list_cycle.png" alt></p>
+<p>我们来证明一下：</p>
+<p>假设进入环之前的长度为<code>x</code></p>
+<p>快慢指针相遇时，进入环之后走过的长度为<code>a</code></p>
+<p>环的长度为<code>C</code></p>
+<p>所以当它们相遇时，慢指针走了<code>x+a</code>步，快指针走了<code>x+kC+a</code>步</p>
+<p>其中，k为正整数，表示快指针走了多少圈，但实际上走多少圈都是没关系的，相对位置没有变，所以我们为了简单，取1即可。</p>
+<p>而又因为慢指针每次走1步，快指针每次走2步</p>
+<p>所以快指针走过的路程是慢指针的两倍，即<code>2(x+a)</code></p>
+<p>显然<code>x+C+a = 2(x+a)</code>，即<code>x = C-a</code></p>
+<p><code>C-a</code>又正好是慢指针还没有走完的路程</p>
+<p>所以当快慢指针相遇时，再设置一个指针从链表头部开始遍历，每次也走1步。新指针和慢指针相遇的点，就是链表环的入口。</p>
+<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">detectCycle</span><span class="params">(self, head: ListNode)</span> -&gt; ListNode:</span></span><br><span class="line">        <span class="keyword">if</span> head <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> head.next <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        slow = head</span><br><span class="line">        fast = head</span><br><span class="line">        <span class="keyword">while</span> fast <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> fast.next <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">            slow = slow.next</span><br><span class="line">            <span class="keyword">if</span> fast == slow:</span><br><span class="line">                new_slow = head</span><br><span class="line">                <span class="keyword">while</span> new_slow != slow:</span><br><span class="line">                    new_slow = new_slow.next</span><br><span class="line">                    slow = slow.next</span><br><span class="line">                <span class="keyword">return</span> new_slow</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="876-链表的中间结点"><a href="#876-链表的中间结点" class="headerlink" title="876. 链表的中间结点"></a>876. 链表的中间结点</h1><h3 id="题目-3"><a href="#题目-3" class="headerlink" title="题目"></a>题目</h3><blockquote>
+<p>给定一个带有头结点 head 的非空单链表，返回链表的中间结点。</p>
+<p>如果有两个中间结点，则返回第二个中间结点。</p>
+<p>示例 1：</p>
+<p>输入：[1,2,3,4,5]<br>输出：此列表中的结点 3 (序列化形式：[3,4,5])<br>返回的结点值为 3 。 (测评系统对该结点序列化表述是 [3,4,5])。<br>注意，我们返回了一个 ListNode 类型的对象 ans，这样：<br>ans.val = 3, ans.next.val = 4, ans.next.next.val = 5, 以及 ans.next.next.next = NULL.<br>示例 2：</p>
+<p>输入：[1,2,3,4,5,6]<br>输出：此列表中的结点 4 (序列化形式：[4,5,6])<br>由于该列表有两个中间结点，值分别为 3 和 4，我们返回第二个结点。</p>
+<p>提示：</p>
+<p>给定链表的结点数介于 1 和 100 之间。</p>
+</blockquote>
+<h3 id="思路-3"><a href="#思路-3" class="headerlink" title="思路"></a>思路</h3><p>很简单，略</p>
+<h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">middleNode</span><span class="params">(self, head: ListNode)</span> -&gt; ListNode:</span></span><br><span class="line">        <span class="keyword">if</span> head <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> head.next <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> head</span><br><span class="line">        middle = head</span><br><span class="line">        cur = head</span><br><span class="line">        i = <span class="number">1</span></span><br><span class="line">        j = <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> cur <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> cur.next <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            cur = cur.next</span><br><span class="line">            j += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> i*<span class="number">2</span> &lt;= j:</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">                middle = middle.next</span><br><span class="line">        <span class="keyword">return</span> middle</span><br></pre></td></tr></table></figure>
+
+<h1 id="21-合并两个有序链表"><a href="#21-合并两个有序链表" class="headerlink" title="21. 合并两个有序链表"></a>21. 合并两个有序链表</h1><h3 id="题目-4"><a href="#题目-4" class="headerlink" title="题目"></a>题目</h3><blockquote>
+<p>将两个升序链表合并为一个新的升序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 </p>
+<p> 示例：</p>
+<p> 输入：1-&gt;2-&gt;4, 1-&gt;3-&gt;4<br> 输出：1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4</p>
+</blockquote>
+<h3 id="思路-4"><a href="#思路-4" class="headerlink" title="思路"></a>思路</h3><p>很简单，略</p>
+<h3 id="代码-4"><a href="#代码-4" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">mergeTwoLists</span><span class="params">(self, l1: ListNode, l2: ListNode)</span> -&gt; ListNode:</span></span><br><span class="line">        cur = ListNode(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">if</span> l1 <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> l2</span><br><span class="line">        <span class="keyword">if</span> l2 <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> l1</span><br><span class="line">        l3 = cur</span><br><span class="line">        <span class="keyword">while</span> l1 <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">or</span> l2 <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">if</span> l1 <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">and</span> l2 <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                cur.next = l2</span><br><span class="line">                l2 = l2.next</span><br><span class="line">            <span class="keyword">elif</span> l2 <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">and</span> l1 <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                cur.next = l1</span><br><span class="line">                l1 = l1.next</span><br><span class="line">            <span class="keyword">elif</span> l1.val &lt; l2.val:</span><br><span class="line">                cur.next = l1</span><br><span class="line">                l1 = l1.next</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                cur.next = l2</span><br><span class="line">                l2 = l2.next</span><br><span class="line">            cur = cur.next</span><br><span class="line">        <span class="keyword">return</span> l3.next</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://shaffer.cn/golang/golang-goroutine-schedule/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -383,13 +638,23 @@
                 
               
 
-              <time title="Created: 2020-05-14 15:14:39 / Modified: 18:23:55" itemprop="dateCreated datePublished" datetime="2020-05-14T15:14:39+08:00">2020-05-14</time>
+              <time title="Created: 2020-05-14 15:14:39" itemprop="dateCreated datePublished" datetime="2020-05-14T15:14:39+08:00">2020-05-14</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-05-15 00:15:57" itemprop="dateModified" datetime="2020-05-15T00:15:57+08:00">2020-05-15</time>
+              </span>
             
           
 
@@ -518,7 +783,7 @@
 <li>向长时间运行的G任务发出抢占调度</li>
 <li>收回因syscall长时间阻塞的P</li>
 </ul>
-<h1 id="学以致用"><a href="#学以致用" class="headerlink" title="学以致用"></a>学以致用</h1><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"runtime"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printTime</span><span class="params">(n <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	now := time.Now()</span><br><span class="line">	fmt.Printf(<span class="string">"Index: %d, Now: %d ns \n"</span>, n, now.Nanosecond())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	runtime.GOMAXPROCS(<span class="number">1</span>)</span><br><span class="line">    sum := <span class="number">0</span></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		printTime(<span class="number">2</span>)</span><br><span class="line">		<span class="built_in">panic</span>(<span class="string">"hello goroutine"</span>)</span><br><span class="line">	&#125;()</span><br><span class="line">	printTime(<span class="number">1</span>)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">1000000000</span>; i++ &#123;</span><br><span class="line">		sum += i</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Printf(<span class="string">"sum: %d\n"</span>, sum)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="学以致用"><a href="#学以致用" class="headerlink" title="学以致用"></a>学以致用</h1><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"runtime"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printTime</span><span class="params">(n <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	now := time.Now()</span><br><span class="line">	fmt.Printf(<span class="string">"Index: %d, Now: %d ns \n"</span>, n, now.Nanosecond())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	runtime.GOMAXPROCS(<span class="number">1</span>)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		printTime(<span class="number">2</span>)</span><br><span class="line">		<span class="built_in">panic</span>(<span class="string">"hello goroutine"</span>)</span><br><span class="line">	&#125;()</span><br><span class="line">	printTime(<span class="number">1</span>)</span><br><span class="line">	sum := <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">1000000000</span>; i++ &#123;</span><br><span class="line">		sum += i</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Printf(<span class="string">"sum: %d\n"</span>, sum)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上面代码应该会输出</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Index: 1, Now: 10386200 ns</span><br><span class="line">Index: 2, Now: 20386900 ns</span><br><span class="line">panic: hello goroutine</span><br></pre></td></tr></table></figure>
@@ -2049,194 +2314,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/mac/mac-iterm2-rz-sz-stuck-solution/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Shaffer John">
-      <meta itemprop="description" content="一只生之无趣死之乏味的丧家之犬">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="朱晓峰">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/mac/mac-iterm2-rz-sz-stuck-solution/" class="post-title-link" itemprop="url">解决mac下iterm2使用rz、sz导致终端卡死的情况</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-09-27 12:05:18" itemprop="dateCreated datePublished" datetime="2019-09-27T12:05:18+08:00">2019-09-27</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-04-29 14:59:18" itemprop="dateModified" datetime="2020-04-29T14:59:18+08:00">2020-04-29</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mac/" itemprop="url" rel="index"><span itemprop="name">mac</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="安装lrzsz"><a href="#安装lrzsz" class="headerlink" title="安装lrzsz"></a>安装lrzsz</h3><p>mac: <code>brew install lrzsz</code></p>
-<p>centos: <code>yum install lrzsz</code></p>
-<h3 id="创建两个脚本"><a href="#创建两个脚本" class="headerlink" title="创建两个脚本"></a>创建两个脚本</h3><p>将下面两个脚本保存至mac电脑的/usr/local/bin/</p>
-<p><a href="https://github.com/shafferjohn/iterm2-zmodem/blob/master/iterm2-send-zmodem.sh" target="_blank" rel="noopener">iterm2-send-zmodem.sh</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># Author: Matt Mastracci (matthew@mastracci.com)</span></span><br><span class="line"><span class="comment"># AppleScript from http://stackoverflow.com/questions/4309087/cancel-button-on-osascript-in-a-bash-script</span></span><br><span class="line"><span class="comment"># licensed under cc-wiki with attribution required </span></span><br><span class="line"><span class="comment"># Remainder of script public domain</span></span><br><span class="line"></span><br><span class="line">osascript -e <span class="string">'tell application "iTerm2" to version'</span> &gt; /dev/null 2&gt;&amp;1 &amp;&amp; NAME=iTerm2 || NAME=iTerm</span><br><span class="line"><span class="keyword">if</span> [[ <span class="variable">$NAME</span> = <span class="string">"iTerm"</span> ]]; <span class="keyword">then</span></span><br><span class="line">	FILE=`osascript -e <span class="string">'tell application "iTerm" to activate'</span> -e <span class="string">'tell application "iTerm" to set thefile to choose file with prompt "Choose a file to send"'</span> -e <span class="string">"do shell script (\"echo \"&amp;(quoted form of POSIX path of thefile as Unicode text)&amp;\"\")"</span>`</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	FILE=`osascript -e <span class="string">'tell application "iTerm2" to activate'</span> -e <span class="string">'tell application "iTerm2" to set thefile to choose file with prompt "Choose a file to send"'</span> -e <span class="string">"do shell script (\"echo \"&amp;(quoted form of POSIX path of thefile as Unicode text)&amp;\"\")"</span>`</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="variable">$FILE</span> = <span class="string">""</span> ]]; <span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> Cancelled.</span><br><span class="line">	<span class="comment"># Send ZModem cancel</span></span><br><span class="line">	<span class="built_in">echo</span> -e \\x18\\x18\\x18\\x18\\x18</span><br><span class="line">	sleep 1</span><br><span class="line">	<span class="built_in">echo</span></span><br><span class="line">	<span class="built_in">echo</span> \<span class="comment"># Cancelled transfer</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	/usr/<span class="built_in">local</span>/bin/sz <span class="string">"<span class="variable">$FILE</span>"</span> -e -b</span><br><span class="line">	sleep 1</span><br><span class="line">	<span class="built_in">echo</span></span><br><span class="line">	<span class="built_in">echo</span> \<span class="comment"># Received $FILE</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-
-<p><a href="https://github.com/shafferjohn/iterm2-zmodem/blob/master/iterm2-recv-zmodem.sh" target="_blank" rel="noopener">iterm2-recv-zmodem.sh</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># Author: Matt Mastracci (matthew@mastracci.com)</span></span><br><span class="line"><span class="comment"># AppleScript from http://stackoverflow.com/questions/4309087/cancel-button-on-osascript-in-a-bash-script</span></span><br><span class="line"><span class="comment"># licensed under cc-wiki with attribution required </span></span><br><span class="line"><span class="comment"># Remainder of script public domain</span></span><br><span class="line"></span><br><span class="line">osascript -e <span class="string">'tell application "iTerm2" to version'</span> &gt; /dev/null 2&gt;&amp;1 &amp;&amp; NAME=iTerm2 || NAME=iTerm</span><br><span class="line"><span class="keyword">if</span> [[ <span class="variable">$NAME</span> = <span class="string">"iTerm"</span> ]]; <span class="keyword">then</span></span><br><span class="line">	FILE=`osascript -e <span class="string">'tell application "iTerm" to activate'</span> -e <span class="string">'tell application "iTerm" to set thefile to choose folder with prompt "Choose a folder to place received files in"'</span> -e <span class="string">"do shell script (\"echo \"&amp;(quoted form of POSIX path of thefile as Unicode text)&amp;\"\")"</span>`</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	FILE=`osascript -e <span class="string">'tell application "iTerm2" to activate'</span> -e <span class="string">'tell application "iTerm2" to set thefile to choose folder with prompt "Choose a folder to place received files in"'</span> -e <span class="string">"do shell script (\"echo \"&amp;(quoted form of POSIX path of thefile as Unicode text)&amp;\"\")"</span>`</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [[ <span class="variable">$FILE</span> = <span class="string">""</span> ]]; <span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> Cancelled.</span><br><span class="line">	<span class="comment"># Send ZModem cancel</span></span><br><span class="line">	<span class="built_in">echo</span> -e \\x18\\x18\\x18\\x18\\x18</span><br><span class="line">	sleep 1</span><br><span class="line">	<span class="built_in">echo</span></span><br><span class="line">	<span class="built_in">echo</span> \<span class="comment"># Cancelled transfer</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	<span class="built_in">cd</span> <span class="string">"<span class="variable">$FILE</span>"</span></span><br><span class="line">	/usr/<span class="built_in">local</span>/bin/rz -E -e -b</span><br><span class="line">	sleep 1</span><br><span class="line">	<span class="built_in">echo</span></span><br><span class="line">	<span class="built_in">echo</span></span><br><span class="line">	<span class="built_in">echo</span> \<span class="comment"># Sent \-\&gt; $FILE</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="给予上述两个脚本足够的运行权限"><a href="#给予上述两个脚本足够的运行权限" class="headerlink" title="给予上述两个脚本足够的运行权限"></a>给予上述两个脚本足够的运行权限</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 /usr/<span class="built_in">local</span>/bin/iterm2-send-zmodem.sh</span><br><span class="line">chmod 777 /usr/<span class="built_in">local</span>/bin/iterm2-recv-zmodem.sh</span><br></pre></td></tr></table></figure>
-
-<h3 id="设置iterm2，添加trigger"><a href="#设置iterm2，添加trigger" class="headerlink" title="设置iterm2，添加trigger"></a>设置iterm2，添加trigger</h3><p>添加两条trigger</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Regular expression: \*\*B0100</span><br><span class="line">Action: Run Silent Coprocess</span><br><span class="line">Parameters: /usr/local/bin/iterm2-send-zmodem.sh</span><br><span class="line">Instant: checked</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Regular expression: \*\*B00000000000000</span><br><span class="line">Action: Run Silent Coprocess</span><br><span class="line">Parameters: /usr/local/bin/iterm2-recv-zmodem.sh</span><br><span class="line">Instant: checked</span><br></pre></td></tr></table></figure>
-
-<p><img src="/images/iterm2_setting_1.png" alt="iterm2设置"></p>
-<p><img src="/images/iterm2_setting_2.png" alt="iterm2设置"></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2285,7 +2362,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>

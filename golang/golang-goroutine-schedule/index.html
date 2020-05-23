@@ -108,7 +108,7 @@
 <meta property="og:image" content="https://shaffer.cn/images/gopher_complex.jpg">
 <meta property="og:image" content="https://shaffer.cn/images/gopher_simple.jpg">
 <meta property="og:image" content="https://shaffer.cn/images/goroutine_scheduler_model.png">
-<meta property="og:updated_time" content="2020-05-14T10:23:55.115Z">
+<meta property="og:updated_time" content="2020-05-14T16:15:57.760Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Goroutine 调度浅析">
 <meta name="twitter:description" content="Goroutine是什么众所周知，操作系统拥有进程和线程，进程是资源分配的最小单位，线程是CPU调度的最小单位，协程是比线程更小的一种执行单元，blablabla这些都太理论了。 就拿我们日常使用电脑的例子来说明，打开浏览器程序，就是创建了一个新进程，打开三个网页标签页，就是在这个进程下创建了三个线程。 为了更好地说明协程，先举个简单的例子，假设现在有一个煤矿厂，里面有一条工作流水线：挖煤 -&amp;g">
@@ -385,13 +385,23 @@
                 
               
 
-              <time title="Created: 2020-05-14 15:14:39 / Modified: 18:23:55" itemprop="dateCreated datePublished" datetime="2020-05-14T15:14:39+08:00">2020-05-14</time>
+              <time title="Created: 2020-05-14 15:14:39" itemprop="dateCreated datePublished" datetime="2020-05-14T15:14:39+08:00">2020-05-14</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-05-15 00:15:57" itemprop="dateModified" datetime="2020-05-15T00:15:57+08:00">2020-05-15</time>
+              </span>
             
           
 
@@ -518,7 +528,7 @@
 <li>向长时间运行的G任务发出抢占调度</li>
 <li>收回因syscall长时间阻塞的P</li>
 </ul>
-<h1 id="学以致用"><a href="#学以致用" class="headerlink" title="学以致用"></a>学以致用</h1><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"runtime"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printTime</span><span class="params">(n <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	now := time.Now()</span><br><span class="line">	fmt.Printf(<span class="string">"Index: %d, Now: %d ns \n"</span>, n, now.Nanosecond())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	runtime.GOMAXPROCS(<span class="number">1</span>)</span><br><span class="line">    sum := <span class="number">0</span></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		printTime(<span class="number">2</span>)</span><br><span class="line">		<span class="built_in">panic</span>(<span class="string">"hello goroutine"</span>)</span><br><span class="line">	&#125;()</span><br><span class="line">	printTime(<span class="number">1</span>)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">1000000000</span>; i++ &#123;</span><br><span class="line">		sum += i</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Printf(<span class="string">"sum: %d\n"</span>, sum)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="学以致用"><a href="#学以致用" class="headerlink" title="学以致用"></a>学以致用</h1><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"runtime"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printTime</span><span class="params">(n <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	now := time.Now()</span><br><span class="line">	fmt.Printf(<span class="string">"Index: %d, Now: %d ns \n"</span>, n, now.Nanosecond())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	runtime.GOMAXPROCS(<span class="number">1</span>)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		printTime(<span class="number">2</span>)</span><br><span class="line">		<span class="built_in">panic</span>(<span class="string">"hello goroutine"</span>)</span><br><span class="line">	&#125;()</span><br><span class="line">	printTime(<span class="number">1</span>)</span><br><span class="line">	sum := <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">1000000000</span>; i++ &#123;</span><br><span class="line">		sum += i</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Printf(<span class="string">"sum: %d\n"</span>, sum)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上面代码应该会输出</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Index: 1, Now: 10386200 ns</span><br><span class="line">Index: 2, Now: 20386900 ns</span><br><span class="line">panic: hello goroutine</span><br></pre></td></tr></table></figure>
@@ -585,6 +595,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/algorithm/algorithm-training-leetcode-simple-linked-list/" rel="prev" title="[算法训练]LeetCode: 一些简单的单链表算法题">
+                [算法训练]LeetCode: 一些简单的单链表算法题 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -659,7 +673,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
