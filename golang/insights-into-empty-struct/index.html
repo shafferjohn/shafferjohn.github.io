@@ -97,17 +97,20 @@
 
 
 
-  <meta name="description" content="一只生之无趣死之乏味的丧家之犬">
-<meta name="keywords" content="朱晓峰,Shaffer John,博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="朱晓峰">
-<meta property="og:url" content="https://shaffer.cn/tags/license/index.html">
+  <meta name="description" content="背景偶然发现项目代码中有如下的写法： 12345678type Student struct &amp;#123;	Name string	Age int&amp;#125;func NewStudent(s Student) *Student &amp;#123;	return &amp;amp;s&amp;#125;  我们且不去探讨“这样写法有什么作用”、“为什么要这样写”，我们先就代码本身讨论。 众所周知，从严格意义上来说，go">
+<meta name="keywords" content="golang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="空struct引发的一些探索">
+<meta property="og:url" content="https://shaffer.cn/golang/insights-into-empty-struct/index.html">
 <meta property="og:site_name" content="朱晓峰">
-<meta property="og:description" content="一只生之无趣死之乏味的丧家之犬">
+<meta property="og:description" content="背景偶然发现项目代码中有如下的写法： 12345678type Student struct &amp;#123;	Name string	Age int&amp;#125;func NewStudent(s Student) *Student &amp;#123;	return &amp;amp;s&amp;#125;  我们且不去探讨“这样写法有什么作用”、“为什么要这样写”，我们先就代码本身讨论。 众所周知，从严格意义上来说，go">
 <meta property="og:locale" content="zh">
+<meta property="og:image" content="https://shaffer.cn/images/caller.png">
+<meta property="og:updated_time" content="2020-11-22T09:56:16.661Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="朱晓峰">
-<meta name="twitter:description" content="一只生之无趣死之乏味的丧家之犬">
+<meta name="twitter:title" content="空struct引发的一些探索">
+<meta name="twitter:description" content="背景偶然发现项目代码中有如下的写法： 12345678type Student struct &amp;#123;	Name string	Age int&amp;#125;func NewStudent(s Student) *Student &amp;#123;	return &amp;amp;s&amp;#125;  我们且不去探讨“这样写法有什么作用”、“为什么要这样写”，我们先就代码本身讨论。 众所周知，从严格意义上来说，go">
+<meta name="twitter:image" content="https://shaffer.cn/images/caller.png">
 
 
 
@@ -115,7 +118,7 @@
 
   
   
-  <link rel="canonical" href="https://shaffer.cn/tags/license/">
+  <link rel="canonical" href="https://shaffer.cn/golang/insights-into-empty-struct/">
 
 
 
@@ -125,7 +128,7 @@
   };
 </script>
 
-  <title>Tag: license | 朱晓峰</title>
+  <title>空struct引发的一些探索 | 朱晓峰</title>
   
 
 
@@ -173,7 +176,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -276,22 +279,6 @@
   
     
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
   
 
   
@@ -337,57 +324,322 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>license<small>Tag</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
+
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/golang/insights-into-empty-struct/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shaffer John">
+      <meta itemprop="description" content="一只生之无趣死之乏味的丧家之犬">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="朱晓峰">
+    </span>
+
+    
+      <header class="post-header">
+
         
-          <a class="post-title-link" href="/qingyou/gitlab-ee-license-crack/" itemprop="url">
-            
-              <span itemprop="name">Gitlab ee 许可证破解 Gitlab Enterprise Edition License Crack</span>
-            
-          </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">空struct引发的一些探索
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-09-19T17:17:16+08:00" content="2019-09-19">
-          09-19
-        </time>
-      </div>
+              
+            
+          </h1>
+        
 
-    </header>
-  </article>
+        <div class="post-meta">
 
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-11-22 16:22:19 / Modified: 17:56:16" itemprop="dateCreated datePublished" datetime="2020-11-22T16:22:19+08:00">2020-11-22</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang/" itemprop="url" rel="index"><span itemprop="name">golang</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>偶然发现项目代码中有如下的写法：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Student <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="keyword">string</span></span><br><span class="line">	Age <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewStudent</span><span class="params">(s Student)</span> *<span class="title">Student</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;s</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们且不去探讨“这样写法有什么作用”、“为什么要这样写”，我们先就代码本身讨论。</p>
+<p>众所周知，从严格意义上来说，golang函数调用中只有值传递的方式传递参数，所以这个函数会返回一个新的指针，并指向一个新的对象。</p>
+<p>然后我就在思考，这种函数会被编译器特殊优化么？</p>
+<h3 id="探索"><a href="#探索" class="headerlink" title="探索"></a>探索</h3><p>写一个简单demo测试一下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> A <span class="keyword">struct</span>&#123;&#125; <span class="comment">// 空struct</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewStructA</span><span class="params">(a A)</span> *<span class="title">A</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;a</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	a := A&#123;&#125;</span><br><span class="line">	newA := NewStructA(a)</span><br><span class="line">	fmt.Printf(<span class="string">"a: %p, newA: %p\n"</span>, &amp;a, newA)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果很amazing啊</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ go run main.go</span><br><span class="line">a: 0x5a6d88, newA: 0x5a6d88</span><br></pre></td></tr></table></figure>
+
+<p>两个指针居然完全相等，这不合常理啊，讲道理，值传递的话，return返回出来的应该是一个新对象的指针啊</p>
+<p>不过仔细观察一下，这个例子中，A是一个空struct，函数里也不可能修改传进来的<code>A的实例a</code>，所以即使两个是相同的指针也没有任何影响。</p>
+<p>那我们就去看看编译器是怎么做的吧。</p>
+<p><code>-gcflags=&#39;-S&#39;</code> 列出汇编代码</p>
+<p><code>FUNCDATA</code>和<code>PCDATA</code>是编译器产生的，用于保存一些给垃圾收集的信息，在本例中可以过滤掉</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ go build -gcflags=<span class="string">'-S'</span> main.go 2&gt;&amp;1 | grep -v <span class="string">"FUNCDATA\|PCDATA"</span> | grep -A10 <span class="string">'"".NewStructA STEXT'</span></span><br><span class="line"></span><br><span class="line"><span class="string">""</span>.NewStructA STEXT nosplit size=13 args=0x8 locals=0x0</span><br><span class="line">        0x0000 00000 (D:\projects\<span class="built_in">test</span>\go\struct\1\main.go:7)   TEXT    <span class="string">""</span>.NewStructA(SB), NOSPLIT|ABIInternal, <span class="variable">$0</span>-8</span><br><span class="line">        0x0000 00000 (D:\projects\<span class="built_in">test</span>\go\struct\1\main.go:8)   LEAQ    runtime.zerobase(SB), AX</span><br><span class="line">        0x0007 00007 (D:\projects\<span class="built_in">test</span>\go\struct\1\main.go:8)   MOVQ    AX, <span class="string">""</span>.~r1+8(SP)</span><br><span class="line">        0x000c 00012 (D:\projects\<span class="built_in">test</span>\go\struct\1\main.go:8)   RET</span><br><span class="line">        0x0000 48 8d 05 00 00 00 00 48 89 44 24 08 c3           H......H.D$..</span><br><span class="line">        rel 3+4 t=16 runtime.zerobase+0</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p><code>$0-8</code>中0代表的是分配的栈帧大小为0，8代表的是各个实参和返回值的总大小</p>
+<p><img src="/images/caller.png" alt="caller"></p>
+<p><code>LEAQ    runtime.zerobase(SB), AX</code></p>
+<p>把<code>runtime.zerobase(SB)</code>的地址传送到<code>AX</code>寄存器</p>
+<p><code>MOVQ    AX, &quot;&quot;.~r1+8(SP)</code></p>
+<p>把<code>AX</code>寄存器中的数据移动到<code>~r1+8(SP)</code>即返回值的位置</p>
+<p><code>runtime.zerobase</code>是个什么东西？</p>
+<p>翻看源码找到<code>runtime/malloc.go</code>826行</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// base address for all 0-byte allocations</span></span><br><span class="line"><span class="keyword">var</span> zerobase <span class="keyword">uintptr</span></span><br></pre></td></tr></table></figure>
+
+<p>是一个用于所有对内存零占用的结构的地址</p>
+<p>所以空struct的地址就是zerobase，所以函数<code>NewStructA</code>才会返回相同的地址。</p>
+<p>而且实际上前文所说的<code>$0-8中的8代表的是各个实参和返回值的总大小</code>，这个<code>8</code>也可以理解了，实参其实并没有占用栈空间，是返回值(空struct的指针)占用了栈空间的8个字节。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"unsafe"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> A <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	a := A&#123;&#125;</span><br><span class="line">	fmt.Println(unsafe.Sizeof(a))  <span class="comment">// print 0</span></span><br><span class="line">	fmt.Println(unsafe.Sizeof(&amp;a)) <span class="comment">// print 8</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="空struct特性"><a href="#空struct特性" class="headerlink" title="空struct特性"></a>空struct特性</h3><ol>
+<li><p>以前一直不理解<code>chan struct{}</code>的意图，其实可以理解为<code>struct{}</code>是golang中最小的数据结构</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">done := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    done &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">&#125;()</span><br><span class="line">&lt;- done</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>map[string]struct{}</code>比<code>map[string]bool</code>更节约空间</p>
+</li>
+<li><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x [<span class="number">1000000000</span>]<span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">fmt.Println(unsafe.Sizeof(x)) <span class="comment">// print 0</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li><p><a href="https://golang.org/doc/asm" target="_blank" rel="noopener">A Quick Guide to Go’s Assembler</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/u010853261/article/details/101060546" target="_blank" rel="noopener">golang汇编语言基础</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/Tencent_TEG/article/details/108413692" target="_blank" rel="noopener">Golang 汇编入门知识总结</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/qq_34777600/article/details/87195673" target="_blank" rel="noopener">空结构体struct{}解析</a></p>
+</li>
+</ul>
+<h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><table>
+<thead>
+<tr>
+<th>助记符</th>
+<th>指令种类</th>
+<th>用途</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MOVQ</td>
+<td>传送</td>
+<td>数据传送</td>
+<td>MOVQ 48, AX // 把 48 传送到 AX</td>
+</tr>
+<tr>
+<td>LEAQ</td>
+<td>传送</td>
+<td>地址传送</td>
+<td>LEAQ AX, BX // 把 AX 有效地址传送到 BX</td>
+</tr>
+<tr>
+<td>PUSHQ</td>
+<td>传送</td>
+<td>栈压入</td>
+<td>PUSHQ AX // 将 AX 内容送入栈顶位置</td>
+</tr>
+<tr>
+<td>POPQ</td>
+<td>传送</td>
+<td>栈弹出</td>
+<td>POPQ AX // 弹出栈顶数据后修改栈顶指针</td>
+</tr>
+<tr>
+<td>ADDQ</td>
+<td>运算</td>
+<td>相加并赋值</td>
+<td>ADDQ BX, AX // 等价于 AX+=BX</td>
+</tr>
+<tr>
+<td>SUBQ</td>
+<td>运算</td>
+<td>相减并赋值</td>
+<td>SUBQ BX, AX // 等价于 AX-=BX</td>
+</tr>
+<tr>
+<td>CMPQ</td>
+<td>运算</td>
+<td>比较大小</td>
+<td>CMPQ SI CX // 比较 SI 和 CX 的大小</td>
+</tr>
+<tr>
+<td>CALL</td>
+<td>转移</td>
+<td>调用函数</td>
+<td>CALL runtime.printnl(SB) // 发起调用</td>
+</tr>
+<tr>
+<td>JMP</td>
+<td>转移</td>
+<td>无条件转移指令</td>
+<td>JMP 0x0185 //无条件转至 0x0185 地址处</td>
+</tr>
+<tr>
+<td>JLS</td>
+<td>转移</td>
+<td>条件转移指令</td>
+<td>JLS 0x0185 //左边小于右边，则跳到 0x0185</td>
+</tr>
+</tbody></table>
 
       
     </div>
 
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/golang/" rel="tag"># golang</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/uncategorized/mac-idea-terminal-alt-key-solution/" rel="next" title="解决mac下IntelliJ IDEA的terminal无法使用快速按单词移动光标">
+                <i class="fa fa-chevron-left"></i> 解决mac下IntelliJ IDEA的terminal无法使用快速按单词移动光标
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
 
         </div>
         
@@ -407,8 +659,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -551,6 +812,23 @@
       </div>
 
       
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#探索"><span class="nav-number">2.</span> <span class="nav-text">探索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#空struct特性"><span class="nav-number">3.</span> <span class="nav-text">空struct特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#附录"><span class="nav-number">5.</span> <span class="nav-text">附录</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
 
       
 
@@ -680,6 +958,10 @@
 
 
   
+  <script src="/js/scrollspy.js?v=7.1.2"></script>
+<script src="/js/post-details.js?v=7.1.2"></script>
+
+
 
   
 
@@ -695,6 +977,37 @@
 
   
 
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '2fb1d41262f7e6a9a807',
+    clientSecret: 'bbe0cb7ddb171c539aebed10008ffebbb335d007',
+    repo: 'shafferjohn.github.io',
+    owner: 'shafferjohn',
+    admin: ['shafferjohn'],
+    id: md5(location.pathname),
+    
+      language: window.navigator.language || window.navigator.userLanguage,
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
 
 
   

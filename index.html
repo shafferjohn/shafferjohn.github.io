@@ -338,6 +338,633 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/golang/insights-into-empty-struct/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shaffer John">
+      <meta itemprop="description" content="一只生之无趣死之乏味的丧家之犬">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="朱晓峰">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/golang/insights-into-empty-struct/" class="post-title-link" itemprop="url">空struct引发的一些探索</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-11-22 16:22:19 / Modified: 17:56:16" itemprop="dateCreated datePublished" datetime="2020-11-22T16:22:19+08:00">2020-11-22</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang/" itemprop="url" rel="index"><span itemprop="name">golang</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>偶然发现项目代码中有如下的写法：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Student <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="keyword">string</span></span><br><span class="line">	Age <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewStudent</span><span class="params">(s Student)</span> *<span class="title">Student</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;s</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们且不去探讨“这样写法有什么作用”、“为什么要这样写”，我们先就代码本身讨论。</p>
+<p>众所周知，从严格意义上来说，golang函数调用中只有值传递的方式传递参数，所以这个函数会返回一个新的指针，并指向一个新的对象。</p>
+<p>然后我就在思考，这种函数会被编译器特殊优化么？</p>
+<h3 id="探索"><a href="#探索" class="headerlink" title="探索"></a>探索</h3><p>写一个简单demo测试一下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> A <span class="keyword">struct</span>&#123;&#125; <span class="comment">// 空struct</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewStructA</span><span class="params">(a A)</span> *<span class="title">A</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;a</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	a := A&#123;&#125;</span><br><span class="line">	newA := NewStructA(a)</span><br><span class="line">	fmt.Printf(<span class="string">"a: %p, newA: %p\n"</span>, &amp;a, newA)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果很amazing啊</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ go run main.go</span><br><span class="line">a: 0x5a6d88, newA: 0x5a6d88</span><br></pre></td></tr></table></figure>
+
+<p>两个指针居然完全相等，这不合常理啊，讲道理，值传递的话，return返回出来的应该是一个新对象的指针啊</p>
+<p>不过仔细观察一下，这个例子中，A是一个空struct，函数里也不可能修改传进来的<code>A的实例a</code>，所以即使两个是相同的指针也没有任何影响。</p>
+<p>那我们就去看看编译器是怎么做的吧。</p>
+<p><code>-gcflags=&#39;-S&#39;</code> 列出汇编代码</p>
+<p><code>FUNCDATA</code>和<code>PCDATA</code>是编译器产生的，用于保存一些给垃圾收集的信息，在本例中可以过滤掉</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ go build -gcflags=<span class="string">'-S'</span> main.go 2&gt;&amp;1 | grep -v <span class="string">"FUNCDATA\|PCDATA"</span> | grep -A10 <span class="string">'"".NewStructA STEXT'</span></span><br><span class="line"></span><br><span class="line"><span class="string">""</span>.NewStructA STEXT nosplit size=13 args=0x8 locals=0x0</span><br><span class="line">        0x0000 00000 (D:\projects\<span class="built_in">test</span>\go\struct\1\main.go:7)   TEXT    <span class="string">""</span>.NewStructA(SB), NOSPLIT|ABIInternal, <span class="variable">$0</span>-8</span><br><span class="line">        0x0000 00000 (D:\projects\<span class="built_in">test</span>\go\struct\1\main.go:8)   LEAQ    runtime.zerobase(SB), AX</span><br><span class="line">        0x0007 00007 (D:\projects\<span class="built_in">test</span>\go\struct\1\main.go:8)   MOVQ    AX, <span class="string">""</span>.~r1+8(SP)</span><br><span class="line">        0x000c 00012 (D:\projects\<span class="built_in">test</span>\go\struct\1\main.go:8)   RET</span><br><span class="line">        0x0000 48 8d 05 00 00 00 00 48 89 44 24 08 c3           H......H.D$..</span><br><span class="line">        rel 3+4 t=16 runtime.zerobase+0</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p><code>$0-8</code>中0代表的是分配的栈帧大小为0，8代表的是各个实参和返回值的总大小</p>
+<p><img src="/images/caller.png" alt="caller"></p>
+<p><code>LEAQ    runtime.zerobase(SB), AX</code></p>
+<p>把<code>runtime.zerobase(SB)</code>的地址传送到<code>AX</code>寄存器</p>
+<p><code>MOVQ    AX, &quot;&quot;.~r1+8(SP)</code></p>
+<p>把<code>AX</code>寄存器中的数据移动到<code>~r1+8(SP)</code>即返回值的位置</p>
+<p><code>runtime.zerobase</code>是个什么东西？</p>
+<p>翻看源码找到<code>runtime/malloc.go</code>826行</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// base address for all 0-byte allocations</span></span><br><span class="line"><span class="keyword">var</span> zerobase <span class="keyword">uintptr</span></span><br></pre></td></tr></table></figure>
+
+<p>是一个用于所有对内存零占用的结构的地址</p>
+<p>所以空struct的地址就是zerobase，所以函数<code>NewStructA</code>才会返回相同的地址。</p>
+<p>而且实际上前文所说的<code>$0-8中的8代表的是各个实参和返回值的总大小</code>，这个<code>8</code>也可以理解了，实参其实并没有占用栈空间，是返回值(空struct的指针)占用了栈空间的8个字节。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"unsafe"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> A <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	a := A&#123;&#125;</span><br><span class="line">	fmt.Println(unsafe.Sizeof(a))  <span class="comment">// print 0</span></span><br><span class="line">	fmt.Println(unsafe.Sizeof(&amp;a)) <span class="comment">// print 8</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="空struct特性"><a href="#空struct特性" class="headerlink" title="空struct特性"></a>空struct特性</h3><ol>
+<li><p>以前一直不理解<code>chan struct{}</code>的意图，其实可以理解为<code>struct{}</code>是golang中最小的数据结构</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">done := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    done &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">&#125;()</span><br><span class="line">&lt;- done</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>map[string]struct{}</code>比<code>map[string]bool</code>更节约空间</p>
+</li>
+<li><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x [<span class="number">1000000000</span>]<span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">fmt.Println(unsafe.Sizeof(x)) <span class="comment">// print 0</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li><p><a href="https://golang.org/doc/asm" target="_blank" rel="noopener">A Quick Guide to Go’s Assembler</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/u010853261/article/details/101060546" target="_blank" rel="noopener">golang汇编语言基础</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/Tencent_TEG/article/details/108413692" target="_blank" rel="noopener">Golang 汇编入门知识总结</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/qq_34777600/article/details/87195673" target="_blank" rel="noopener">空结构体struct{}解析</a></p>
+</li>
+</ul>
+<h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><table>
+<thead>
+<tr>
+<th>助记符</th>
+<th>指令种类</th>
+<th>用途</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MOVQ</td>
+<td>传送</td>
+<td>数据传送</td>
+<td>MOVQ 48, AX // 把 48 传送到 AX</td>
+</tr>
+<tr>
+<td>LEAQ</td>
+<td>传送</td>
+<td>地址传送</td>
+<td>LEAQ AX, BX // 把 AX 有效地址传送到 BX</td>
+</tr>
+<tr>
+<td>PUSHQ</td>
+<td>传送</td>
+<td>栈压入</td>
+<td>PUSHQ AX // 将 AX 内容送入栈顶位置</td>
+</tr>
+<tr>
+<td>POPQ</td>
+<td>传送</td>
+<td>栈弹出</td>
+<td>POPQ AX // 弹出栈顶数据后修改栈顶指针</td>
+</tr>
+<tr>
+<td>ADDQ</td>
+<td>运算</td>
+<td>相加并赋值</td>
+<td>ADDQ BX, AX // 等价于 AX+=BX</td>
+</tr>
+<tr>
+<td>SUBQ</td>
+<td>运算</td>
+<td>相减并赋值</td>
+<td>SUBQ BX, AX // 等价于 AX-=BX</td>
+</tr>
+<tr>
+<td>CMPQ</td>
+<td>运算</td>
+<td>比较大小</td>
+<td>CMPQ SI CX // 比较 SI 和 CX 的大小</td>
+</tr>
+<tr>
+<td>CALL</td>
+<td>转移</td>
+<td>调用函数</td>
+<td>CALL runtime.printnl(SB) // 发起调用</td>
+</tr>
+<tr>
+<td>JMP</td>
+<td>转移</td>
+<td>无条件转移指令</td>
+<td>JMP 0x0185 //无条件转至 0x0185 地址处</td>
+</tr>
+<tr>
+<td>JLS</td>
+<td>转移</td>
+<td>条件转移指令</td>
+<td>JLS 0x0185 //左边小于右边，则跳到 0x0185</td>
+</tr>
+</tbody></table>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/uncategorized/mac-idea-terminal-alt-key-solution/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shaffer John">
+      <meta itemprop="description" content="一只生之无趣死之乏味的丧家之犬">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="朱晓峰">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/uncategorized/mac-idea-terminal-alt-key-solution/" class="post-title-link" itemprop="url">解决mac下IntelliJ IDEA的terminal无法使用快速按单词移动光标</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-06-23 10:21:42" itemprop="dateCreated datePublished" datetime="2020-06-23T10:21:42+08:00">2020-06-23</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-11-22 17:56:16" itemprop="dateModified" datetime="2020-11-22T17:56:16+08:00">2020-11-22</time>
+              </span>
+            
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在mac下idea的terminal没办法使用option+左右方向键跳过单词，google后找到以下解决方案：</p>
+<h3 id="非zsh用户"><a href="#非zsh用户" class="headerlink" title="非zsh用户"></a>非zsh用户</h3><p>Add this to ~/.zshrc:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;\e\eC&quot;: forward-word</span><br><span class="line">&quot;\e\eD&quot;: backward-word</span><br></pre></td></tr></table></figure>
+
+<h3 id="zsh用户"><a href="#zsh用户" class="headerlink" title="zsh用户"></a>zsh用户</h3><p>Add this to ~/.zshrc:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bindkey &quot;\e\eOD&quot; backward-word</span><br><span class="line">bindkey &quot;\e\eOC&quot; forward-word</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/uncategorized/docker-migrate/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shaffer John">
+      <meta itemprop="description" content="一只生之无趣死之乏味的丧家之犬">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="朱晓峰">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/uncategorized/docker-migrate/" class="post-title-link" itemprop="url">docker占用磁盘过高 迁移安装目录</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-06-10 10:23:58" itemprop="dateCreated datePublished" datetime="2020-06-10T10:23:58+08:00">2020-06-10</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-11-22 17:56:16" itemprop="dateModified" datetime="2020-11-22T17:56:16+08:00">2020-11-22</time>
+              </span>
+            
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>前两天，logstash服务的日志一直在报错：</p>
+<p><code>[FORBIDDEN/12/index read-only / allow delete (api)]</code></p>
+<p>登上es所在的服务器看一眼，发现磁盘满了，挂载在<code>/</code>根目录的磁盘只有50G，虽然并不是es的存储导致的（因为已经设置了好了volums），但是docker容器没有空间也会导致服务不正常，所以打算把docker服务的目录都迁移至另一个分区。</p>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>查看当前docker的Root Dir</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># docker info | grep &quot;Docker Root Dir&quot;</span><br><span class="line">Docker Root Dir: /var/lib/docker</span><br></pre></td></tr></table></figure>
+
+<p>这个目录是docker默认的安装目录，不论是构建镜像还是创建容器都是存储在该目录下的，如果磁盘满了，甚至会导致docker容器不能重启。</p>
+<p>假设我们<code>/home</code>分区有足够的空间，我们会将<code>/var/lib/docker</code>迁移至<code>/home/var/lib/docker</code>，创建一下这个目录</p>
+<p><code>mkdir -p /home/var/lib/docker/</code></p>
+<h1 id="开始迁移"><a href="#开始迁移" class="headerlink" title="开始迁移"></a>开始迁移</h1><p>停止docker服务</p>
+<p><code>systemctl stop docker</code></p>
+<p>利用<code>rsync</code>同步目录文件</p>
+<p><code>rsync -avz /var/lib/docker/ /home/var/lib/docker</code></p>
+<p>经过漫长的等待后，目录终于同步完成了</p>
+<p>接下来编辑docker配置文件，没有则创建</p>
+<p>例如：</p>
+<p><code>vim /etc/docker/daemon.json</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"data-root"</span>: <span class="string">"/home/var/lib/docker"</span>,</span><br><span class="line">    <span class="attr">"registry-mirrors"</span>: [<span class="string">"mirror.docker.example.com"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>启动docker服务</p>
+<p><code>systemctl start docker</code></p>
+<p>再次执行<code>docker info</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># docker info | grep &quot;Docker Root Dir&quot;</span><br><span class="line">Docker Root Dir: /home/var/lib/docker</span><br></pre></td></tr></table></figure>
+
+<p>再启动各个容器，查看服务是否正常。</p>
+<p>这样就迁移好了。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://shaffer.cn/algorithm/algorithm-training-leetcode-simple-linked-list/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1747,573 +2374,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/algorithm/algorithm-training-leetcode-53-maximum-subarray/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Shaffer John">
-      <meta itemprop="description" content="一只生之无趣死之乏味的丧家之犬">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="朱晓峰">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/algorithm/algorithm-training-leetcode-53-maximum-subarray/" class="post-title-link" itemprop="url">[算法训练]LeetCode 53: 最大子序和</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-01-03 18:11:50" itemprop="dateCreated datePublished" datetime="2020-01-03T18:11:50+08:00">2020-01-03</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-05-12 19:38:39" itemprop="dateModified" datetime="2020-05-12T19:38:39+08:00">2020-05-12</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/algorithm/" itemprop="url" rel="index"><span itemprop="name">algorithm</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">最大子序和</span><br><span class="line"></span><br><span class="line">给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。 </span><br><span class="line"></span><br><span class="line">示例: </span><br><span class="line"></span><br><span class="line">输入: `[-2,1,-3,4,-1,2,1,-5,4]`</span><br><span class="line"></span><br><span class="line">输出: `6`</span><br><span class="line"></span><br><span class="line">解释: 连续子数组 `[4,-1,2,1]` 的和最大，为 `6`。</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">进阶: </span><br><span class="line"></span><br><span class="line">如果你已经实现复杂度为 O(n) 的解法，尝试使用更为精妙的分治法求解。</span><br></pre></td></tr></table></figure>
-
-<p>Related Topics <strong>数组</strong> <strong>分治算法</strong> <strong>动态规划</strong></p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/algorithm/algorithm-training-leetcode-53-maximum-subarray/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/mac/macintosh-setup-note-z390-i7-9700k-uhd630/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Shaffer John">
-      <meta itemprop="description" content="一只生之无趣死之乏味的丧家之犬">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="朱晓峰">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/mac/macintosh-setup-note-z390-i7-9700k-uhd630/" class="post-title-link" itemprop="url">黑苹果安装小记（z390+i7-9700k+uhd630）</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-11-17 21:58:35" itemprop="dateCreated datePublished" datetime="2019-11-17T21:58:35+08:00">2019-11-17</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-05-09 10:17:50" itemprop="dateModified" datetime="2020-05-09T10:17:50+08:00">2020-05-09</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mac/" itemprop="url" rel="index"><span itemprop="name">mac</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>为什么要装黑苹果？</p>
-<p>因为穷而且还爱折腾，延续了我小时候一天不挨打就皮痒的性格。</p>
-<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>首先，需要判断自己电脑硬件是否支持安装黑苹果，或者是否有这套硬件的成功案例。</p>
-<p>选择适用的硬件，黑苹果就已经成功了一大半。</p>
-<p>我的主要硬件配置如下：</p>
-<table>
-<thead>
-<tr>
-<th>设备</th>
-<th>型号</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>CPU</td>
-<td>i7 9700K</td>
-</tr>
-<tr>
-<td>核显</td>
-<td>Intel UHD Graphics 630</td>
-</tr>
-<tr>
-<td>主板</td>
-<td>微星 MAG Z390 TOMAHAWK (MS-7B18)</td>
-</tr>
-<tr>
-<td>独显</td>
-<td>RTX 2060 super</td>
-</tr>
-</tbody></table>
-<p>安装黑苹果大致流程：</p>
-<ul>
-<li><p>制作安装盘</p>
-</li>
-<li><p>配置好bios</p>
-</li>
-<li><p>根据机器硬件修改好<code>config.plist</code>文件，至少有一份可以进macOS系统的<code>config.plist</code>，然后使用<code>Clover Configurator</code>修改起来会方便点</p>
-</li>
-<li><p>启动、抹盘、安装</p>
-</li>
-<li><p>测试各个功能是否正常工作</p>
-</li>
-</ul>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/mac/macintosh-setup-note-z390-i7-9700k-uhd630/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/uncategorized/docker-cannot-start/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Shaffer John">
-      <meta itemprop="description" content="一只生之无趣死之乏味的丧家之犬">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="朱晓峰">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/uncategorized/docker-cannot-start/" class="post-title-link" itemprop="url">docker无法启动解决方案</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-10-10 14:51:33" itemprop="dateCreated datePublished" datetime="2019-10-10T14:51:33+08:00">2019-10-10</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-05-09 10:18:04" itemprop="dateModified" datetime="2020-05-09T10:18:04+08:00">2020-05-09</time>
-              </span>
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><strong>太长不看：重启大法好，<code>sudo reboot</code></strong></p>
-<p>先说个题外话，<code>dockerd</code>是用<code>sudo</code>启动的话，<code>docker-compose</code>也要用<code>sudo</code>。</p>
-<p>有一次排查问题，我多次重启docker</p>
-<p><code>sudo systemctl restart docker</code></p>
-<p>并且删除了<code>/run/containerd/containerd.sock</code>和<code>/var/run/containerd/containerd.sock</code>两个socket文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo ls -l /run/containerd/containerd.sock</span><br><span class="line">srw-rw----. 1 root root 0 Oct 10 13:59 /run/containerd/containerd.sock</span><br></pre></td></tr></table></figure>
-
-<p>然后docker就起不来了 &gt;.&lt;</p>
-<p>那就排查问题，先看看<code>sudo systemctl status docker -l</code>和<code>sudo journalctl -xe</code></p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/uncategorized/docker-cannot-start/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2362,7 +2422,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-count">18</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2424,7 +2484,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">13</span>
+                      
+                    
+                    <span class="site-state-item-count">14</span>
                     <span class="site-state-item-name">tags</span>
                   
                 </div>
