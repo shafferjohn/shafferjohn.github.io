@@ -97,22 +97,18 @@
 
 
 
-  <meta name="description" content="Goroutine是什么众所周知，操作系统拥有进程和线程，进程是资源分配的最小单位，线程是CPU调度的最小单位，协程是比线程更小的一种执行单元，blablabla这些都太理论了。 就拿我们日常使用电脑的例子来说明，打开浏览器程序，就是创建了一个新进程，打开三个网页标签页，就是在这个进程下创建了三个线程。 为了更好地说明协程，先举个简单的例子，假设现在有一个煤矿厂，里面有一条工作流水线：挖煤 -&amp;g">
-<meta name="keywords" content="golang,goroutine">
+  <meta name="description" content="panic日志12345678910111213141516171819202122[signal SIGSEGV: segmentation violation code=0x1 addr=0x0 pc=0x512f5d]goroutine 48438156 [running]:encoding/json.(*encodeState).marshal.func1(0xc009decb40)">
+<meta name="keywords" content="golang,panic">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Goroutine 调度浅析">
-<meta property="og:url" content="https://shaffer.cn/golang/golang-goroutine-schedule/index.html">
+<meta property="og:title" content="Golang panic疑难杂症（二）">
+<meta property="og:url" content="https://shaffer.cn/golang/golang-panic-problem-2/index.html">
 <meta property="og:site_name" content="朱晓峰">
-<meta property="og:description" content="Goroutine是什么众所周知，操作系统拥有进程和线程，进程是资源分配的最小单位，线程是CPU调度的最小单位，协程是比线程更小的一种执行单元，blablabla这些都太理论了。 就拿我们日常使用电脑的例子来说明，打开浏览器程序，就是创建了一个新进程，打开三个网页标签页，就是在这个进程下创建了三个线程。 为了更好地说明协程，先举个简单的例子，假设现在有一个煤矿厂，里面有一条工作流水线：挖煤 -&amp;g">
+<meta property="og:description" content="panic日志12345678910111213141516171819202122[signal SIGSEGV: segmentation violation code=0x1 addr=0x0 pc=0x512f5d]goroutine 48438156 [running]:encoding/json.(*encodeState).marshal.func1(0xc009decb40)">
 <meta property="og:locale" content="zh">
-<meta property="og:image" content="https://shaffer.cn/images/gopher_complex.jpg">
-<meta property="og:image" content="https://shaffer.cn/images/gopher_simple.jpg">
-<meta property="og:image" content="https://shaffer.cn/images/goroutine_scheduler_model.png">
-<meta property="og:updated_time" content="2020-05-14T16:15:57.760Z">
+<meta property="og:updated_time" content="2021-08-16T15:55:54.122Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Goroutine 调度浅析">
-<meta name="twitter:description" content="Goroutine是什么众所周知，操作系统拥有进程和线程，进程是资源分配的最小单位，线程是CPU调度的最小单位，协程是比线程更小的一种执行单元，blablabla这些都太理论了。 就拿我们日常使用电脑的例子来说明，打开浏览器程序，就是创建了一个新进程，打开三个网页标签页，就是在这个进程下创建了三个线程。 为了更好地说明协程，先举个简单的例子，假设现在有一个煤矿厂，里面有一条工作流水线：挖煤 -&amp;g">
-<meta name="twitter:image" content="https://shaffer.cn/images/gopher_complex.jpg">
+<meta name="twitter:title" content="Golang panic疑难杂症（二）">
+<meta name="twitter:description" content="panic日志12345678910111213141516171819202122[signal SIGSEGV: segmentation violation code=0x1 addr=0x0 pc=0x512f5d]goroutine 48438156 [running]:encoding/json.(*encodeState).marshal.func1(0xc009decb40)">
 
 
 
@@ -120,7 +116,7 @@
 
   
   
-  <link rel="canonical" href="https://shaffer.cn/golang/golang-goroutine-schedule/">
+  <link rel="canonical" href="https://shaffer.cn/golang/golang-panic-problem-2/">
 
 
 
@@ -130,7 +126,7 @@
   };
 </script>
 
-  <title>Goroutine 调度浅析 | 朱晓峰</title>
+  <title>Golang panic疑难杂症（二） | 朱晓峰</title>
   
 
 
@@ -342,7 +338,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/golang/golang-goroutine-schedule/">
+    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/golang/golang-panic-problem-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Shaffer John">
@@ -359,7 +355,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Goroutine 调度浅析
+          <h1 class="post-title" itemprop="name headline">Golang panic疑难杂症（二）
 
               
             
@@ -385,23 +381,13 @@
                 
               
 
-              <time title="Created: 2020-05-14 15:14:39" itemprop="dateCreated datePublished" datetime="2020-05-14T15:14:39+08:00">2020-05-14</time>
+              <time title="Created: 2021-08-16 23:55:00 / Modified: 23:55:54" itemprop="dateCreated datePublished" datetime="2021-08-16T23:55:00+08:00">2021-08-16</time>
             </span>
           
 
           
             
 
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-05-15 00:15:57" itemprop="dateModified" datetime="2020-05-15T00:15:57+08:00">2020-05-15</time>
-              </span>
             
           
 
@@ -452,99 +438,48 @@
       
 
       
-        <h1 id="Goroutine是什么"><a href="#Goroutine是什么" class="headerlink" title="Goroutine是什么"></a>Goroutine是什么</h1><p>众所周知，操作系统拥有进程和线程，进程是资源分配的最小单位，线程是CPU调度的最小单位，协程是比线程更小的一种执行单元，blablabla这些都太理论了。</p>
-<p>就拿我们日常使用电脑的例子来说明，打开浏览器程序，就是创建了一个新进程，打开三个网页标签页，就是在这个进程下创建了三个线程。</p>
-<p>为了更好地说明协程，先举个简单的例子，假设现在有一个煤矿厂，里面有一条工作流水线：挖煤 -&gt; 运煤 -&gt; 烧煤。</p>
-<p><img src="/images/gopher_complex.jpg" alt="单进程单线程"></p>
-<p>这时候，煤矿厂的老板想要获得更高的产能，有很多方式。</p>
-<h3 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h3><p>最容易想到的就是再开一个煤矿厂 :P</p>
-<p><img src="/images/gopher_simple.jpg" alt="多进程"></p>
-<p>进程之间的资源是相互独立的，也就是有独立的矿山、独立的小推车、独立的火炉，两者互不干扰。</p>
-<h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><p>在一个矿场里设立更多的流水线，我们现在还是只有一个矿山和一个火炉，那在多条流水线的情况下，就需要考虑资源的调度。比如流水线1在把煤矿运到火炉的时候，发现流水线2还在占用火炉，而且占用好久了，这时候矿场老板可以让流水线2暂停，让流水线1开始使用火炉。</p>
-<p>线程之间可以共享进程的资源，合理使用和调度多线程可以更好地利用资源。</p>
-<h3 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h3><p>拆分流水线的工作，分成三个人分别完成挖煤、运煤和烧煤。并且设立一个包工头，包工头可以调度这些工人。</p>
-<p>比如有工人A用了好久的火炉，这时候包工头会让工人A歇一歇，让等在一旁的工人B来使用火炉。</p>
-<p>上述的例子与概念的对应关系为：</p>
-<table>
-<thead>
-<tr>
-<th>例子</th>
-<th>概念</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>所有的煤矿、推车、火炉</td>
-<td>系统资源</td>
-</tr>
-<tr>
-<td>老板</td>
-<td>操作系统</td>
-</tr>
-<tr>
-<td>一整个运作的矿场</td>
-<td>进程</td>
-</tr>
-<tr>
-<td>一条流水线</td>
-<td>线程</td>
-</tr>
-<tr>
-<td>工人的工作（挖煤、运煤、烧煤）</td>
-<td>协程</td>
-</tr>
-<tr>
-<td>包工头</td>
-<td>用户态下协程的调度器</td>
-</tr>
-</tbody></table>
-<p>简单来说，进程、线程、协程三者创建所耗费的资源是逐渐降低的，所以可以用更小的粒度控制程序和更少的切换时带来的消耗。</p>
-<h3 id="Goroutine"><a href="#Goroutine" class="headerlink" title="Goroutine"></a>Goroutine</h3><p>Go的Goroutine是用户级的线程。同样是4个Goroutine，可能只对应了2个内核级线程。Goroutine调度器把4个Goroutine分配到2个内核级线程上，而这两个内核级线程对CPU的使用由内核线程调度器来分配。</p>
-<p>由于线程可以由操作系统调度管理，而goroutine是user-level下的，所以只能由Go runtime自己负责goroutine的调度。Goroutines的调度是协作式的，而线程不是。这意味着每次一个线程发生切换，都需要保存/恢复所有寄存器，包括16个通用寄存器、PC(程序计数器）、SP（栈指针）、段寄存器(segment register)、16个XMM寄存器、FP协处理器状态、X AVX寄存器以及所有MSR等。而当另一个Goroutine被调度时，只需要保存/恢复三个寄存器，分别是PC、SP和DX。Go调度器和任何现代操作 系统的调度器都是O(1)复杂度的，这意味着增加线程/goroutines的数量不会增加切换时间，但改变寄存器的代价是不可忽视的。</p>
-<h1 id="Goroutine调度模型"><a href="#Goroutine调度模型" class="headerlink" title="Goroutine调度模型"></a>Goroutine调度模型</h1><p><img src="/images/goroutine_scheduler_model.png" alt="goroutine调度模型"></p>
-<p>P是一个“逻辑 Proccessor”，每个G要想真正运行起来，首先需要被分配一个P（进入到 P 的 <code>local runq</code> 中，这里暂忽略 <code>global runq</code> 那个环节）。对于 G 来说，P 就是运行它的 “CPU”，可以说：G 的眼里只有 P。但从 Go scheduler 视角来看，真正的 “CPU” 是 M，只有将 P 和 M 绑定才能让 P 的 runq 中 G 得以真实运行起来。这样的 P 与 M 的关系，就好比 Linux 操作系统调度层面用户线程 (user thread) 与核心线程 (kernel thread) 的对应关系那样，都是 （n × m） 模型。具体来说：</p>
-<ul>
-<li>G: 表示goroutine，存储了goroutine的执行stack信息、goroutine状态以及goroutine的任务函数等；另外G对象是可以重用的。</li>
-<li>P: 表示逻辑processor，P的数量决定了系统内最大可并行的G的数量（前提：系统的物理cpu核数&gt;=P的数量）；P的最大作用还是其拥有的各种G对象队列、链表、一些cache和状态。</li>
-<li>M: M代表着真正的执行计算资源。在绑定有效的p后，进入schedule循环；而schedule循环的机制大致是从各种队列、p的本地队列中获取G，切换到G的执行栈上并执行G的函数，调用goexit做清理工作并回到m，如此反复。M并不保留G状态，这是G可以跨M调度的基础。</li>
-</ul>
-<h1 id="Goroutine抢占调度"><a href="#Goroutine抢占调度" class="headerlink" title="Goroutine抢占调度"></a>Goroutine抢占调度</h1><p>一个 goroutine 获得计算资源（CPU）后一般不能一直运行到完毕，它们往往可能要等待其他资源才能执行完成，比如读取磁盘文件内容、通过RPC调用远程服务等，在等待的过程中 goroutine 是不需要消耗计算资源的，因此调度器可以把计算资源给其他的 goroutine 使用。</p>
-<p>goroutine 遇到下面的情况下可能会产生重新调度：</p>
-<ul>
-<li>阻塞 I/O</li>
-<li>select操作</li>
-<li>阻塞在channel</li>
-<li>等待锁</li>
-<li>主动调用 runtime.Gosched()</li>
-</ul>
-<p>如果一个 goroutine 不包含上面提到的几种情况，那么其他的 goroutine 就无法被调度到相应的 CPU 上面运行，这是不应该发生的。这时候就需要抢占机制来打断长时间占用 CPU 资源的 goroutine ，发起重新调度。</p>
-<p>而且如果设置<code>GOMAXPROCS=1</code>，其中的一个goroutine不主动调用<code>runtime.Gosched()</code>则会永远执行下去，其他的G就会被“饿死”。于是Dmitry Vyukov又提出了<a href="https://docs.google.com/document/d/1ETuA2IOmnaQ4j81AtTGT40Y4_Jr6_IDASEKg0t0dBR8/edit#!" target="_blank" rel="noopener">《Go Preemptive Scheduler Design》</a>并在Go 1.2中实现了“抢占式”调度。</p>
-<p>这个抢占式调度的原理则是在每个函数或方法的入口，加上一段额外的代码，让runtime有机会检查是否需要执行抢占调度。这种解决方案只能说局部解决了“饿死”问题，对于没有函数调用，纯算法循环计算的G，调度器依然无法抢占。</p>
-<p>Go程序启动时，runtime会去启动一个名为sysmon的m(一般称为监控线程)，该m无需绑定p即可运行，该m在整个Go程序的运行过程中至关重要，sysmon 可以找出长时间占用（<code>forcePreemptNS</code>默认为10ms）的 goroutine，并将该goroutine的抢占标志位被设为true，这样在这个goroutine下次调用函数的时候就会发生调度，被移入P的local runq，等待下一次的调度。</p>
-<p>sysmon每20us~10ms启动一次，主要完成如下工作：</p>
-<ul>
-<li>释放闲置超过5分钟的span物理内存</li>
-<li>如果超过2分钟没有垃圾回收，强制执行</li>
-<li>将长时间未处理的netpoll结果添加到任务队列</li>
-<li>向长时间运行的G任务发出抢占调度</li>
-<li>收回因syscall长时间阻塞的P</li>
-</ul>
-<h1 id="学以致用"><a href="#学以致用" class="headerlink" title="学以致用"></a>学以致用</h1><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"runtime"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printTime</span><span class="params">(n <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	now := time.Now()</span><br><span class="line">	fmt.Printf(<span class="string">"Index: %d, Now: %d ns \n"</span>, n, now.Nanosecond())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	runtime.GOMAXPROCS(<span class="number">1</span>)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		printTime(<span class="number">2</span>)</span><br><span class="line">		<span class="built_in">panic</span>(<span class="string">"hello goroutine"</span>)</span><br><span class="line">	&#125;()</span><br><span class="line">	printTime(<span class="number">1</span>)</span><br><span class="line">	sum := <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">1000000000</span>; i++ &#123;</span><br><span class="line">		sum += i</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Printf(<span class="string">"sum: %d\n"</span>, sum)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h1 id="panic日志"><a href="#panic日志" class="headerlink" title="panic日志"></a>panic日志</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[signal SIGSEGV: segmentation violation code=0x1 addr=0x0 pc=0x512f5d]</span><br><span class="line"></span><br><span class="line">goroutine 48438156 [running]:</span><br><span class="line">encoding/json.(*encodeState).marshal.func1(0xc009decb40)</span><br><span class="line">        /go/src/encoding/json/encode.go:326 +0x9a</span><br><span class="line">panic(0xd41f60, 0x187d170)</span><br><span class="line">        /go/src/runtime/panic.go:967 +0x15d</span><br><span class="line">encoding/json.(*encodeState).string(0xc004eba100, 0x0, 0x7, 0x1)</span><br><span class="line">        /go/src/encoding/json/encode.go:1003 +0x5d</span><br><span class="line">encoding/json.stringEncoder(0xc004eba100, 0xce54e0, 0xc008bfeea0, 0x198, 0x100)</span><br><span class="line">        /go/src/encoding/json/encode.go:644 +0x358</span><br><span class="line">encoding/json.structEncoder.encode(0xc00451c000, 0x13, 0x21, 0xc0058d99e0, 0xc004eba100, 0xe29520, 0xc008bfeea0, 0x199, 0xd30100)</span><br><span class="line">        /go/src/encoding/json/encode.go:758 +0x2bb</span><br><span class="line">encoding/json.ptrEncoder.encode(0xc0058d9a70, 0xc004eba100, 0xd26880, 0xc008bfeea0, 0x16, 0xd20100)</span><br><span class="line">        /go/src/encoding/json/encode.go:914 +0x116</span><br><span class="line">encoding/json.(*encodeState).reflectValue(0xc004eba100, 0xd26880, 0xc008bfeea0, 0x16, 0xc009de0100)</span><br><span class="line">        /go/src/encoding/json/encode.go:358 +0x82</span><br><span class="line">encoding/json.(*encodeState).marshal(0xc004eba100, 0xd26880, 0xc008bfeea0, 0x450100, 0x0, 0x0)</span><br><span class="line">        /go/src/encoding/json/encode.go:330 +0xf0</span><br><span class="line">encoding/json.Marshal(0xd26880, 0xc008bfeea0, 0x18cf180, 0x8, 0xc0029067a8, 0xc002038c40, 0x15)</span><br><span class="line">        /go/src/encoding/json/encode.go:161 +0x52</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
-<p>上面代码应该会输出</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Index: 1, Now: 10386200 ns</span><br><span class="line">Index: 2, Now: 20386900 ns</span><br><span class="line">panic: hello goroutine</span><br></pre></td></tr></table></figure>
+<p>可以看到，是json encode string的时候发生的panic，这种情况比较少见。</p>
+<p>重点是这一行日志：</p>
+<p><code>encoding/json.(*encodeState).string(0xc004eba100, 0x0, 0x7, 0x1)</code></p>
+<p><code>string()</code>函数的入参有0x0和0x7</p>
+<p>实际上这里的0x0是指字符串变量指向内容的指针为0，表示长度的变量为0x7</p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p><code>string</code>类型底层实现是一个指向内容的指针和一个表示长度的int</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// StringHeader is the runtime representation of a string.</span></span><br><span class="line"><span class="comment">// It cannot be used safely or portably and its representation may</span></span><br><span class="line"><span class="comment">// change in a later release.</span></span><br><span class="line"><span class="comment">// Moreover, the Data field is not sufficient to guarantee the data</span></span><br><span class="line"><span class="comment">// it references will not be garbage collected, so programs must keep</span></span><br><span class="line"><span class="comment">// a separate, correctly typed pointer to the underlying data.</span></span><br><span class="line"><span class="keyword">type</span> StringHeader <span class="keyword">struct</span> &#123;</span><br><span class="line">	Data <span class="keyword">uintptr</span></span><br><span class="line">	Len  <span class="keyword">int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>因为goroutine1的for循环里面是没有调用函数的，所以不会被插入编译器插入额外抢占调度的检测代码，但由于超过了10ms，该goroutine的抢占标志位已经被设为true了，所以执行到<code>fmt.Printf()</code>的时候发生了调度，开始执行另一个goroutine的代码，最后发生了panic。</p>
-<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>本人才疏学浅，本文写得也比较仓促，如有错误，敬请斧正！</p>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
-<li><p><a href="https://jingwei.link/2019/05/26/golang-routine-scheduler.html" target="_blank" rel="noopener">goroutine 的调度及抢占</a></p>
-</li>
-<li><p><a href="https://tonybai.com/2017/06/23/an-intro-about-goroutine-scheduler/" target="_blank" rel="noopener">也谈goroutine调度器</a></p>
-</li>
-<li><p><a href="https://tonybai.com/2014/11/15/how-goroutines-work/" target="_blank" rel="noopener">Goroutine是如何工作的</a></p>
-</li>
-<li><p><a href="https://www.jianshu.com/p/fc35e081d900" target="_blank" rel="noopener">Golang goroutine</a></p>
-</li>
-</ul>
+<p>对字符串的赋值，分为两部分，所以在go里对字符串进行并发读写的话，有可能会导致指向的内容和长度不匹配，导致一些奇怪的问题。</p>
+<p>比如两个协程同时并发读写同一个字符串变量，一个赋值为”123”，另一个赋值为”123456”，该字符串有可能为”123”，但长度是6。</p>
+<p>但是就算并发读写，Data指针指向的一直是正常地址，只是长度不一定匹配，又怎么会导致nil pointer的呢？</p>
+<p>其实，在go里，有一种特殊优化，如果你把字符串赋值为””，即空字符串的话，Data指针是0，也即空指针。</p>
+<p>我们来验证一下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> AudioClips <span class="keyword">struct</span> &#123;</span><br><span class="line">	Param *TableStruct</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> TableStruct <span class="keyword">struct</span> &#123;</span><br><span class="line">	RequestId      <span class="keyword">string</span></span><br><span class="line">	Type           <span class="keyword">string</span></span><br><span class="line">	Organization   <span class="keyword">string</span></span><br><span class="line">	BtId           <span class="keyword">string</span></span><br><span class="line">	AppId          <span class="keyword">string</span></span><br><span class="line">	TokenId        <span class="keyword">string</span></span><br><span class="line">	Channel        <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">f</span><span class="params">(org, serviceId, appId, channel <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">	curTime := time.Now().Format(layout)</span><br><span class="line">	fmt.Sprintf(<span class="string">"%s@%s@%s@%s@%s@%s"</span>, curTime, org, serviceId, appId, channel, <span class="string">"length"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> layout <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	a := AudioClips&#123;</span><br><span class="line">		Param: &amp;TableStruct&#123;</span><br><span class="line">			AppId: <span class="string">""</span>,</span><br><span class="line">			Organization: <span class="string">"org"</span>,</span><br><span class="line">			Channel: <span class="string">"channel"</span>,</span><br><span class="line">		&#125;,</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> &#123;</span><br><span class="line">			f(a.Param.Organization, <span class="string">"serviceId"</span>, a.Param.AppId, a.Param.Channel)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;a.Param.AppId = <span class="string">""</span>&#125;()</span><br><span class="line">		time.Sleep(<span class="number">10</span>*time.Nanosecond)</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;a.Param.AppId = <span class="string">"default"</span>&#125;()</span><br><span class="line">		time.Sleep(<span class="number">10</span>*time.Nanosecond)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行后发生panic</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">$ go run main.go</span><br><span class="line">panic: runtime error: invalid memory address or nil pointer dereference</span><br><span class="line">[signal 0xc0000005 code=0x0 addr=0x0 pc=0xe570a2]</span><br><span class="line"></span><br><span class="line">goroutine 34 [running]:</span><br><span class="line">fmt.(*buffer).writeString(...)</span><br><span class="line">        C:/Program Files/Go/src/fmt/print.go:82</span><br><span class="line">fmt.(*fmt).padString(0xc0000202b0, 0x0, 0x7)</span><br><span class="line">        C:/Program Files/Go/src/fmt/format.go:110 +0x98</span><br><span class="line">fmt.(*fmt).fmtS(0xc0000202b0, 0x0, 0x7)</span><br><span class="line">        C:/Program Files/Go/src/fmt/format.go:359 +0x68</span><br><span class="line">fmt.(*pp).fmtString(0xc000020270, 0x0, 0x7, 0x21700000073)</span><br><span class="line">        C:/Program Files/Go/src/fmt/print.go:446 +0x1d2</span><br><span class="line">fmt.(*pp).printArg(0xc000020270, 0xead6c0, 0xc0003de2b0, 0x73)</span><br><span class="line">        C:/Program Files/Go/src/fmt/print.go:694 +0x875</span><br><span class="line">fmt.(*pp).doPrintf(0xc000020270, 0xec9c4d, 0x11, 0xc000097f18, 0x6, 0x6)</span><br><span class="line">        C:/Program Files/Go/src/fmt/print.go:1026 +0x168</span><br><span class="line">fmt.Sprintf(0xec9c4d, 0x11, 0xc000097f18, 0x6, 0x6, 0x0, 0x0)</span><br><span class="line">        C:/Program Files/Go/src/fmt/print.go:219 +0x6d</span><br><span class="line">main.f(0xec799a, 0x3, 0xec8574, 0x9, 0x0, 0x7, 0xec7fd9, 0x7)</span><br><span class="line">        C:/Projects/test/11/main.go:43 +0x1de</span><br><span class="line">main.main.func1(0xc000194000)</span><br><span class="line">        C:/Projects/test/11/main.go:59 +0x8a</span><br><span class="line">created by main.main</span><br><span class="line">        C:/Projects/test/11/main.go:57 +0x91</span><br><span class="line">exit status 2</span><br></pre></td></tr></table></figure>
+
+<p>看下汇编代码，略有精简</p>
+<p><code>go tool compile -S -N -l main.go</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">&quot;&quot;.main.func2 STEXT size=92 args=0x8 locals=0x8</span><br><span class="line">        0x0000 00000 (main.go:47)       TEXT    &quot;&quot;.main.func2(SB), ABIInternal, $8-8</span><br><span class="line">        0x0000 00000 (main.go:47)       MOVQ    (TLS), CX</span><br><span class="line">        0x0009 00009 (main.go:47)       CMPQ    SP, 16(CX)</span><br><span class="line">        0x000d 00013 (main.go:47)       PCDATA  $0, $-2</span><br><span class="line">        0x000d 00013 (main.go:47)       JLS     85</span><br><span class="line">        0x000f 00015 (main.go:47)       PCDATA  $0, $-1</span><br><span class="line">        0x000f 00015 (main.go:47)       SUBQ    $8, SP</span><br><span class="line">        0x0013 00019 (main.go:47)       MOVQ    BP, (SP)</span><br><span class="line">        0x0017 00023 (main.go:47)       LEAQ    (SP), BP</span><br><span class="line">        0x001b 00027 (main.go:47)       MOVQ    &quot;&quot;.a+16(SP), CX</span><br><span class="line">        0x0020 00032 (main.go:47)       TESTB   AL, (CX)</span><br><span class="line">        0x0022 00034 (main.go:47)       MOVQ    $0, 72(CX)</span><br><span class="line">        0x002a 00042 (main.go:47)       LEAQ    64(CX), DI</span><br><span class="line">        0x002e 00046 (main.go:47)       CMPL    runtime.writeBarrier(SB), $0</span><br><span class="line">        0x0035 00053 (main.go:47)       JEQ     57</span><br><span class="line">        0x0037 00055 (main.go:47)       JMP     76</span><br><span class="line">        0x0039 00057 (main.go:47)       MOVQ    $0, 64(CX)</span><br><span class="line">        0x0041 00065 (main.go:47)       JMP     67</span><br><span class="line">        0x0043 00067 (main.go:47)       PCDATA  $0, $-1</span><br><span class="line">        0x0043 00067 (main.go:47)       PCDATA  $1, $-1</span><br><span class="line">        0x0043 00067 (main.go:47)       MOVQ    (SP), BP</span><br><span class="line">        0x0047 00071 (main.go:47)       ADDQ    $8, SP</span><br><span class="line">        0x004b 00075 (main.go:47)       RET</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p><code>MOVQ $0, 72(CX)</code> 表示把立即数0存入CX地址+72，即把长度0存入Len</p>
+<p><code>MOVQ $0, 64(CX)</code> 表示把立即数0存入CX地址+64，即指向字符串内容的指针值为0，也就是nil pointer</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">&quot;&quot;.main.func3 STEXT size=100 args=0x8 locals=0x8</span><br><span class="line">        0x0000 00000 (main.go:49)       TEXT    &quot;&quot;.main.func3(SB), ABIInternal, $8-8</span><br><span class="line">        0x0000 00000 (main.go:49)       MOVQ    (TLS), CX</span><br><span class="line">        0x0009 00009 (main.go:49)       CMPQ    SP, 16(CX)</span><br><span class="line">        0x000d 00013 (main.go:49)       PCDATA  $0, $-2</span><br><span class="line">        0x000d 00013 (main.go:49)       JLS     93</span><br><span class="line">        0x000f 00015 (main.go:49)       PCDATA  $0, $-1</span><br><span class="line">        0x000f 00015 (main.go:49)       SUBQ    $8, SP</span><br><span class="line">        0x0013 00019 (main.go:49)       MOVQ    BP, (SP)</span><br><span class="line">        0x0017 00023 (main.go:49)       LEAQ    (SP), BP</span><br><span class="line">        0x001b 00027 (main.go:49)       MOVQ    &quot;&quot;.a+16(SP), CX</span><br><span class="line">        0x0020 00032 (main.go:49)       TESTB   AL, (CX)</span><br><span class="line">        0x0022 00034 (main.go:49)       MOVQ    $7, 72(CX)</span><br><span class="line">        0x002a 00042 (main.go:49)       LEAQ    64(CX), DI</span><br><span class="line">        0x002e 00046 (main.go:49)       PCDATA  $0, $-2</span><br><span class="line">        0x002e 00046 (main.go:49)       PCDATA  $1, $-2</span><br><span class="line">        0x002e 00046 (main.go:49)       CMPL    runtime.writeBarrier(SB), $0</span><br><span class="line">        0x0035 00053 (main.go:49)       JEQ     57</span><br><span class="line">        0x0037 00055 (main.go:49)       JMP     79</span><br><span class="line">        0x0039 00057 (main.go:49)       LEAQ    go.string.&quot;default&quot;(SB), AX</span><br><span class="line">        0x0040 00064 (main.go:49)       MOVQ    AX, 64(CX)</span><br><span class="line">        0x0044 00068 (main.go:49)       JMP     70</span><br><span class="line">        0x0046 00070 (main.go:49)       PCDATA  $0, $-1</span><br><span class="line">        0x0046 00070 (main.go:49)       PCDATA  $1, $-1</span><br><span class="line">        0x0046 00070 (main.go:49)       MOVQ    (SP), BP</span><br><span class="line">        0x004a 00074 (main.go:49)       ADDQ    $8, SP</span><br><span class="line">        0x004e 00078 (main.go:49)       RET</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p><code>MOVQ $7, 72(CX)</code> 表示把立即数7存入CX地址+72，即把长度0存入Len</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LEAQ    go.string.&quot;default&quot;(SB), AX</span><br><span class="line">MOVQ    AX, 64(CX)</span><br></pre></td></tr></table></figure>
+
+<p>表示把指向”default”的地址存入AX，再把AX存入64(CX)，即把指向字符串内容的指针赋值为”default”的地址</p>
+<p>所以在json encode这个字符串的时候，可能会发生字符串有长度，但指向内容的指针是空指针，</p>
+<p>可以通过len(str)&gt;0这样的判断，但真正去取值的时候就发生了nil pointer panic。</p>
+<h1 id="更进一步"><a href="#更进一步" class="headerlink" title="更进一步"></a>更进一步</h1><p>所以可见，如果某个字符串变量存储了很多的内容，可以通过赋值为空字符串进行释放。</p>
+<p>那么问题又来了，如果按上面的分析，赋值为空字符串，指针就会为空，那为什么如下代码没有发生panic</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a := <span class="string">""</span></span><br><span class="line">p := &amp;a</span><br></pre></td></tr></table></figure>
+
+<p>其实编译器会判断到如果这个空字符串在后续是有取指针操作的话，加上如下汇编代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">0x003c 00060 (main.go:9)	MOVQ	&quot;&quot;.&amp;p+24(SP), DI</span><br><span class="line">0x0041 00065 (main.go:9)	MOVQ	&quot;&quot;.&amp;a+16(SP), AX</span><br><span class="line">0x0046 00070 (main.go:9)	CMPL	runtime.writeBarrier(SB), $0</span><br><span class="line">0x004d 00077 (main.go:9)	JEQ	81</span><br><span class="line">0x004f 00079 (main.go:9)	JMP	95</span><br><span class="line">0x0051 00081 (main.go:9)	MOVQ	AX, (DI)</span><br><span class="line">0x0054 00084 (main.go:9)	JMP	86</span><br></pre></td></tr></table></figure>
+
+<p>以保证可以正常取到指针</p>
 
       
     </div>
@@ -573,7 +508,7 @@
           
             <a href="/tags/golang/" rel="tag"># golang</a>
           
-            <a href="/tags/goroutine/" rel="tag"># goroutine</a>
+            <a href="/tags/panic/" rel="tag"># panic</a>
           
         </div>
       
@@ -586,8 +521,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/golang/golang-map-benchmark/" rel="next" title="golang 多种线程安全的map性能比较">
-                <i class="fa fa-chevron-left"></i> golang 多种线程安全的map性能比较
+              <a href="/golang/golang-panic-problem-1/" rel="next" title="Golang panic疑难杂症（一）">
+                <i class="fa fa-chevron-left"></i> Golang panic疑难杂症（一）
               </a>
             
           </div>
@@ -595,10 +530,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/algorithm/algorithm-training-leetcode-simple-linked-list/" rel="prev" title="[算法训练]LeetCode: 一些简单的单链表算法题">
-                [算法训练]LeetCode: 一些简单的单链表算法题 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -813,7 +744,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Goroutine是什么"><span class="nav-number">1.</span> <span class="nav-text">Goroutine是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#进程"><span class="nav-number">1.0.1.</span> <span class="nav-text">进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程"><span class="nav-number">1.0.2.</span> <span class="nav-text">线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#协程"><span class="nav-number">1.0.3.</span> <span class="nav-text">协程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Goroutine"><span class="nav-number">1.0.4.</span> <span class="nav-text">Goroutine</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#Goroutine调度模型"><span class="nav-number">2.</span> <span class="nav-text">Goroutine调度模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Goroutine抢占调度"><span class="nav-number">3.</span> <span class="nav-text">Goroutine抢占调度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#学以致用"><span class="nav-number">4.</span> <span class="nav-text">学以致用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">5.</span> <span class="nav-text">后记</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#panic日志"><span class="nav-number">1.</span> <span class="nav-text">panic日志</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原理"><span class="nav-number">2.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#更进一步"><span class="nav-number">3.</span> <span class="nav-text">更进一步</span></a></li></ol></div>
             
 
           </div>

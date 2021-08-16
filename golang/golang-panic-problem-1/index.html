@@ -97,17 +97,18 @@
 
 
 
-  <meta name="description" content="一只生之无趣死之乏味的丧家之犬">
-<meta name="keywords" content="朱晓峰,Shaffer John,博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="朱晓峰">
-<meta property="og:url" content="https://shaffer.cn/tags/gitlab/index.html">
+  <meta name="description" content="项目里经常出现panic: assignment to entry in nil map的错误，问题其实很简单，但第一眼不一定能看出来。 复现demo： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546package mainimport (	&quot;math/rand&quot;	&quot;runtim">
+<meta name="keywords" content="golang,panic">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang panic疑难杂症（一）">
+<meta property="og:url" content="https://shaffer.cn/golang/golang-panic-problem-1/index.html">
 <meta property="og:site_name" content="朱晓峰">
-<meta property="og:description" content="一只生之无趣死之乏味的丧家之犬">
+<meta property="og:description" content="项目里经常出现panic: assignment to entry in nil map的错误，问题其实很简单，但第一眼不一定能看出来。 复现demo： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546package mainimport (	&quot;math/rand&quot;	&quot;runtim">
 <meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2021-08-16T15:05:35.632Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="朱晓峰">
-<meta name="twitter:description" content="一只生之无趣死之乏味的丧家之犬">
+<meta name="twitter:title" content="Golang panic疑难杂症（一）">
+<meta name="twitter:description" content="项目里经常出现panic: assignment to entry in nil map的错误，问题其实很简单，但第一眼不一定能看出来。 复现demo： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546package mainimport (	&quot;math/rand&quot;	&quot;runtim">
 
 
 
@@ -115,7 +116,7 @@
 
   
   
-  <link rel="canonical" href="https://shaffer.cn/tags/gitlab/">
+  <link rel="canonical" href="https://shaffer.cn/golang/golang-panic-problem-1/">
 
 
 
@@ -125,7 +126,7 @@
   };
 </script>
 
-  <title>Tag: gitlab | 朱晓峰</title>
+  <title>Golang panic疑难杂症（一） | 朱晓峰</title>
   
 
 
@@ -173,7 +174,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -276,22 +277,6 @@
   
     
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
   
 
   
@@ -337,109 +322,211 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block tag">
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>gitlab<small>Tag</small>
-        </h1>
-      </div>
-
-      
-        
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/golang/golang-panic-problem-1/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shaffer John">
+      <meta itemprop="description" content="一只生之无趣死之乏味的丧家之犬">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="朱晓峰">
+    </span>
+
+    
+      <header class="post-header">
+
         
-          <a class="post-title-link" href="/uncategorized/gitlab-ee-upgrade-13-to-14/" itemprop="url">
-            
-              <span itemprop="name">Gitlab EE 从13.x版本升级至14.x注意点</span>
-            
-          </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Golang panic疑难杂症（一）
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2021-07-12T01:31:04+08:00" content="2021-07-12">
-          07-12
-        </time>
-      </div>
+              
+            
+          </h1>
+        
 
-    </header>
-  </article>
+        <div class="post-meta">
 
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2021-08-16 21:52:31 / Modified: 23:05:35" itemprop="dateCreated datePublished" datetime="2021-08-16T21:52:31+08:00">2021-08-16</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang/" itemprop="url" rel="index"><span itemprop="name">golang</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/qingyou/migrate-from-gogs-to-gitlab/" itemprop="url">
-            
-              <span itemprop="name">从Gogs迁移至Gitlab</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-09-19T18:12:22+08:00" content="2019-09-19">
-          09-19
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
 
       
-        
+        <p>项目里经常出现<code>panic: assignment to entry in nil map</code>的错误，问题其实很简单，但第一眼不一定能看出来。</p>
+<p>复现demo：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"math/rand"</span></span><br><span class="line">	<span class="string">"runtime"</span></span><br><span class="line">	<span class="string">"sync"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Task <span class="keyword">struct</span> &#123;</span><br><span class="line">	Result <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Task)</span> <span class="title">f</span><span class="params">(wg *sync.WaitGroup)</span> <span class="title">map</span>[<span class="title">string</span>]<span class="title">interface</span></span>&#123;&#125; &#123;</span><br><span class="line">	<span class="keyword">defer</span> wg.Done()</span><br><span class="line">	<span class="comment">// do something</span></span><br><span class="line">	time.Sleep(<span class="number">10</span>*time.Microsecond)</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125;&#123;t.Result: rand.Int()&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line">	tasks := []Task&#123;</span><br><span class="line">		&#123;Result: <span class="string">"task1"</span>&#125;,</span><br><span class="line">		&#123;Result: <span class="string">"task2"</span>&#125;,</span><br><span class="line">	&#125;</span><br><span class="line">	result := <span class="built_in">make</span>([]<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125;, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> idx, task := <span class="keyword">range</span> tasks &#123;</span><br><span class="line">		wg.Add(<span class="number">1</span>)</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(i <span class="keyword">int</span>, t Task)</span></span> &#123;</span><br><span class="line">			result[i] = t.f(&amp;wg)</span><br><span class="line">		&#125;(idx, task)</span><br><span class="line">	&#125;</span><br><span class="line">	wg.Wait()</span><br><span class="line"></span><br><span class="line">	result[<span class="number">0</span>][<span class="string">"test"</span>] = <span class="number">0</span></span><br><span class="line">	result[<span class="number">1</span>][<span class="string">"test"</span>] = <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	runtime.GOMAXPROCS(<span class="number">2</span>)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++ &#123;</span><br><span class="line">		run()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/qingyou/gitlab-ee-license-crack/" itemprop="url">
-            
-              <span itemprop="name">Gitlab ee 许可证破解 Gitlab Enterprise Edition License Crack</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-09-19T17:17:16+08:00" content="2019-09-19">
-          09-19
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+<p>代码逻辑是期望并发执行两个任务，然后使用得到的结果，但却发生了panic。</p>
+<p>原因是在错误的地方使用了<code>defer wg.Done()</code>，内部函数f执行结束后，还没有将返回值赋值给<code>result[i]</code>，主线程就继续运行了，进而发生nil map panic。</p>
+<p>前人挖的坑，后人的kpi。</p>
 
       
     </div>
 
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/golang/" rel="tag"># golang</a>
+          
+            <a href="/tags/panic/" rel="tag"># panic</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/uncategorized/qq_group_invite/" rel="next" title="欢迎志同道合的朋友一起交流">
+                <i class="fa fa-chevron-left"></i> 欢迎志同道合的朋友一起交流
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/golang/golang-panic-problem-2/" rel="prev" title="Golang panic疑难杂症（二）">
+                Golang panic疑难杂症（二） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
 
         </div>
         
@@ -736,6 +823,10 @@
 
 
   
+  <script src="/js/scrollspy.js?v=7.1.2"></script>
+<script src="/js/post-details.js?v=7.1.2"></script>
+
+
 
   
 
@@ -751,6 +842,37 @@
 
   
 
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '2fb1d41262f7e6a9a807',
+    clientSecret: 'bbe0cb7ddb171c539aebed10008ffebbb335d007',
+    repo: 'shafferjohn.github.io',
+    owner: 'shafferjohn',
+    admin: ['shafferjohn'],
+    id: md5(location.pathname),
+    
+      language: window.navigator.language || window.navigator.userLanguage,
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
 
 
   
