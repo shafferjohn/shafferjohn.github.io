@@ -97,28 +97,28 @@
 
 
 
-  <meta name="description" content="[toc] 前言记录一下实现一个想法的过程 真实影像远程天文台拍摄过程 原图略 处理过程 光谱图像制作获取原始数据 数据源：https://www.eso.org/sci/observing/phase3/data_streams.html 搜索HD编号：HD 10476，找到两份光谱数据，选择合适的下载，最好包含可见光波段   处理光谱数据 读取数据，并转换合适的单位 降采样（可选） Savit">
+  <meta name="description" content="前言记录一下实现一个想法的过程 真实影像远程天文台拍摄过程 原图略 处理过程 光谱图像制作获取原始数据 数据源：https://www.eso.org/sci/observing/phase3/data_streams.html 搜索HD编号：HD 10476，找到两份光谱数据，选择合适的下载，最好包含可见光波段   处理光谱数据 读取数据，并转换合适的单位 降采样（可选） Savitzky-Go">
 <meta name="keywords" content="astronomy,astrophotography,stellar,spectrum,107Piscium,107Psc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="107 Piscium 恒星光谱计划">
 <meta property="og:url" content="https://shaffer.cn/astronomy/spectrum-107-Piscium/index.html">
 <meta property="og:site_name" content="朱晓峰">
-<meta property="og:description" content="[toc] 前言记录一下实现一个想法的过程 真实影像远程天文台拍摄过程 原图略 处理过程 光谱图像制作获取原始数据 数据源：https://www.eso.org/sci/observing/phase3/data_streams.html 搜索HD编号：HD 10476，找到两份光谱数据，选择合适的下载，最好包含可见光波段   处理光谱数据 读取数据，并转换合适的单位 降采样（可选） Savit">
+<meta property="og:description" content="前言记录一下实现一个想法的过程 真实影像远程天文台拍摄过程 原图略 处理过程 光谱图像制作获取原始数据 数据源：https://www.eso.org/sci/observing/phase3/data_streams.html 搜索HD编号：HD 10476，找到两份光谱数据，选择合适的下载，最好包含可见光波段   处理光谱数据 读取数据，并转换合适的单位 降采样（可选） Savitzky-Go">
 <meta property="og:locale" content="zh">
-<meta property="og:image" content="https://shaffer.cn/astronomy/spectrum-107-Piscium/images/107_psc_deepsky_shooting.jpg">
-<meta property="og:image" content="https://shaffer.cn/astronomy/spectrum-107-Piscium/images/107_psc_pixinsight.jpg">
-<meta property="og:image" content="https://shaffer.cn/astronomy/spectrum-107-Piscium/images/107_psc_search_spectrum.png">
-<meta property="og:image" content="https://shaffer.cn/astronomy/spectrum-107-Piscium/images/107_psc_specturm_no_filter.png">
-<meta property="og:image" content="https://shaffer.cn/astronomy/spectrum-107-Piscium/images/107_psc_specturm.png">
-<meta property="og:image" content="https://shaffer.cn/astronomy/spectrum-107-Piscium/images/107_psc_PS_gradient_editor.png">
-<meta property="og:image" content="https://shaffer.cn/astronomy/spectrum-107-Piscium/images/107_psc_PS_gradient_merge_layer.png">
-<meta property="og:image" content="https://shaffer.cn/astronomy/spectrum-107-Piscium/images/107_psc_universe_sandbox.png">
-<meta property="og:image" content="https://shaffer.cn/astronomy/spectrum-107-Piscium/images/107_psc_PS_all_layers.png">
-<meta property="og:updated_time" content="2022-08-12T21:45:05.930Z">
+<meta property="og:image" content="https://shaffer.cn/images/107_psc_deepsky_shooting.jpg">
+<meta property="og:image" content="https://shaffer.cn/images/107_psc_pixinsight.png">
+<meta property="og:image" content="https://shaffer.cn/images/107_psc_search_spectrum.png">
+<meta property="og:image" content="https://shaffer.cn/images/107_psc_specturm_no_filter.png">
+<meta property="og:image" content="https://shaffer.cn/images/107_psc_specturm.png">
+<meta property="og:image" content="https://shaffer.cn/images/107_psc_PS_gradient_editor.png">
+<meta property="og:image" content="https://shaffer.cn/images/107_psc_PS_gradient_merge_layer.png">
+<meta property="og:image" content="https://shaffer.cn/images/107_psc_universe_sandbox.png">
+<meta property="og:image" content="https://shaffer.cn/images/107_psc_PS_all_layers.png">
+<meta property="og:updated_time" content="2022-08-12T21:52:47.506Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="107 Piscium 恒星光谱计划">
-<meta name="twitter:description" content="[toc] 前言记录一下实现一个想法的过程 真实影像远程天文台拍摄过程 原图略 处理过程 光谱图像制作获取原始数据 数据源：https://www.eso.org/sci/observing/phase3/data_streams.html 搜索HD编号：HD 10476，找到两份光谱数据，选择合适的下载，最好包含可见光波段   处理光谱数据 读取数据，并转换合适的单位 降采样（可选） Savit">
-<meta name="twitter:image" content="https://shaffer.cn/astronomy/spectrum-107-Piscium/images/107_psc_deepsky_shooting.jpg">
+<meta name="twitter:description" content="前言记录一下实现一个想法的过程 真实影像远程天文台拍摄过程 原图略 处理过程 光谱图像制作获取原始数据 数据源：https://www.eso.org/sci/observing/phase3/data_streams.html 搜索HD编号：HD 10476，找到两份光谱数据，选择合适的下载，最好包含可见光波段   处理光谱数据 读取数据，并转换合适的单位 降采样（可选） Savitzky-Go">
+<meta name="twitter:image" content="https://shaffer.cn/images/107_psc_deepsky_shooting.jpg">
 
 
 
@@ -391,7 +391,7 @@
                 
               
 
-              <time title="Created: 2022-08-13 03:42:02 / Modified: 05:45:05" itemprop="dateCreated datePublished" datetime="2022-08-13T03:42:02+08:00">2022-08-13</time>
+              <time title="Created: 2022-08-13 03:42:02 / Modified: 05:52:47" itemprop="dateCreated datePublished" datetime="2022-08-13T03:42:02+08:00">2022-08-13</time>
             </span>
           
 
@@ -448,16 +448,15 @@
       
 
       
-        <p>[toc]</p>
-<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>记录一下实现一个想法的过程</p>
-<h1 id="真实影像"><a href="#真实影像" class="headerlink" title="真实影像"></a>真实影像</h1><h2 id="远程天文台拍摄过程"><a href="#远程天文台拍摄过程" class="headerlink" title="远程天文台拍摄过程"></a>远程天文台拍摄过程</h2><p><img src="images/107_psc_deepsky_shooting.jpg" alt="107_psc_deepsky_shooting"></p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>记录一下实现一个想法的过程</p>
+<h1 id="真实影像"><a href="#真实影像" class="headerlink" title="真实影像"></a>真实影像</h1><h2 id="远程天文台拍摄过程"><a href="#远程天文台拍摄过程" class="headerlink" title="远程天文台拍摄过程"></a>远程天文台拍摄过程</h2><p><img src="/images/107_psc_deepsky_shooting.jpg" alt="107_psc_deepsky_shooting"></p>
 <h2 id="原图"><a href="#原图" class="headerlink" title="原图"></a>原图</h2><p>略</p>
-<h2 id="处理过程"><a href="#处理过程" class="headerlink" title="处理过程"></a>处理过程</h2><p><img src="images/107_psc_pixinsight.jpg" alt="107_psc_pixinsight"></p>
+<h2 id="处理过程"><a href="#处理过程" class="headerlink" title="处理过程"></a>处理过程</h2><p><img src="/images/107_psc_pixinsight.png" alt="107_psc_pixinsight"></p>
 <h1 id="光谱图像制作"><a href="#光谱图像制作" class="headerlink" title="光谱图像制作"></a>光谱图像制作</h1><h2 id="获取原始数据"><a href="#获取原始数据" class="headerlink" title="获取原始数据"></a>获取原始数据</h2><ol>
 <li>数据源：<a href="https://www.eso.org/sci/observing/phase3/data_streams.html" target="_blank" rel="noopener">https://www.eso.org/sci/observing/phase3/data_streams.html</a></li>
 <li>搜索HD编号：<code>HD 10476</code>，找到两份光谱数据，选择合适的下载，最好包含可见光波段</li>
 </ol>
-<p><img src="images/107_psc_search_spectrum.png" alt="107_psc_search_spectrum"></p>
+<p><img src="/images/107_psc_search_spectrum.png" alt="107_psc_search_spectrum"></p>
 <h2 id="处理光谱数据"><a href="#处理光谱数据" class="headerlink" title="处理光谱数据"></a>处理光谱数据</h2><ol>
 <li>读取数据，并转换合适的单位</li>
 <li>降采样（可选）</li>
@@ -467,15 +466,15 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> astropy.io <span class="keyword">import</span> fits</span><br><span class="line"><span class="keyword">from</span> scipy.signal <span class="keyword">import</span> savgol_filter</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入文件</span></span><br><span class="line">filepath = os.path.join(<span class="string">r'./spectrum'</span>, <span class="string">'ADP.2016-09-27T07_02_47.049.fits'</span>)</span><br><span class="line">f = fits.open(filepath)</span><br><span class="line">spec = f[<span class="number">1</span>]</span><br><span class="line">data = spec.data</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取数据，并转换单位</span></span><br><span class="line">wave_nm = [wvl/<span class="number">10</span> <span class="keyword">for</span> wvl <span class="keyword">in</span> list(data.field(<span class="number">0</span>)[<span class="number">0</span>])]</span><br><span class="line">flux = list(data.field(<span class="number">1</span>)[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 降采样</span></span><br><span class="line">wave_nm = wave_nm[<span class="number">0</span>::<span class="number">3</span>]</span><br><span class="line">flux = flux[<span class="number">0</span>::<span class="number">3</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Savitzky-Golay滤波</span></span><br><span class="line">flux = savgol_filter(flux, <span class="number">53</span>, <span class="number">1</span>, mode= <span class="string">'nearest'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置输出图片尺寸、标题、纵轴、横轴</span></span><br><span class="line">plt.figure().set_size_inches(<span class="number">24</span>, <span class="number">4</span>)</span><br><span class="line">plt.title(<span class="string">'HD 10476 Spectrum Comparison'</span>)</span><br><span class="line">plt.xlabel(<span class="string">'Wavelength (nm)'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'Flux (ADU s-1 mW-1)'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制</span></span><br><span class="line">plt.plot(wave_nm, flux)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
 
 <p>滤波前的结果</p>
-<p><img src="images/107_psc_specturm_no_filter.png" alt="107_psc_specturm_no_filter"></p>
+<p><img src="/images/107_psc_specturm_no_filter.png" alt="107_psc_specturm_no_filter"></p>
 <p>滤波后的结果</p>
-<p><img src="images/107_psc_specturm.png" alt="107_psc_specturm"></p>
+<p><img src="/images/107_psc_specturm.png" alt="107_psc_specturm"></p>
 <h2 id="创建渐变光谱背景"><a href="#创建渐变光谱背景" class="headerlink" title="创建渐变光谱背景"></a>创建渐变光谱背景</h2><p>由于我的Adobe Photoshop 2022没有自带的光谱渐变，所以我只能手工创建</p>
 <p>色阶并不是均分的，因为在人眼可见光中，红光占的谱线宽度比别的颜色要更宽，所以在编辑颜色的渐变时，给红色到黑色更长的渐变过程</p>
-<p><img src="images/107_psc_PS_gradient_editor.png" alt="107_psc_PS_gradient_editor"></p>
+<p><img src="/images/107_psc_PS_gradient_editor.png" alt="107_psc_PS_gradient_editor"></p>
 <p>合并图层</p>
-<p><img src="images/107_psc_PS_gradient_merge_layer.png" alt="107_psc_PS_gradient_merge_layer"></p>
-<h2 id="用universe-sandbox软件做模拟效果图"><a href="#用universe-sandbox软件做模拟效果图" class="headerlink" title="用universe sandbox软件做模拟效果图"></a>用universe sandbox软件做模拟效果图</h2><p><img src="images/107_psc_universe_sandbox.png" alt="107_psc_universe_sandbox"></p>
+<p><img src="/images/107_psc_PS_gradient_merge_layer.png" alt="107_psc_PS_gradient_merge_layer"></p>
+<h2 id="用universe-sandbox软件做模拟效果图"><a href="#用universe-sandbox软件做模拟效果图" class="headerlink" title="用universe sandbox软件做模拟效果图"></a>用universe sandbox软件做模拟效果图</h2><p><img src="/images/107_psc_universe_sandbox.png" alt="107_psc_universe_sandbox"></p>
 <h2 id="最后PS合成"><a href="#最后PS合成" class="headerlink" title="最后PS合成"></a>最后PS合成</h2><ol>
 <li>添加背景</li>
 <li>调整光谱背景的对比度</li>
@@ -484,7 +483,7 @@
 <li>增加黑色的竖线，调整透明度</li>
 <li>增加文字，外发光效果</li>
 </ol>
-<p><img src="images/107_psc_PS_all_layers.png" alt="107_psc_PS_all_layers"></p>
+<p><img src="/images/107_psc_PS_all_layers.png" alt="107_psc_PS_all_layers"></p>
 <h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>我发现天文数据虽然很公开，但都是在自己平台发布自己天文设备采集到的数据，导致搜寻数据困难，而且数据格式不一，虽然有很多数据整合平台，但感觉反而更乱了，花了很大精力，开了无数个chrome标签页，爆了无数次内存，才终于找到可见光波段的光谱数据</p>
 <p>滤波调参时，有一个重要参考，至少要将钠的D1、D2两条很近的吸收带分辨出来</p>
 <p>虽然全球各地有很多远程天文台可以租用，总有夜晚晴朗的天文台，但仍然很容易观测失败，例如天空突然飞来一堆云、对焦失败、赤道仪故障星点拉线等</p>
