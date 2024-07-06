@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"shaffer.cn","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":"enable","preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Cache Line数据经过主存、L3、L2、L1 Cache到CPU寄存器进行运算，访问的速度逐级提高，L3一般为多核共享，L2、L1一般为单核本地使用。 按照局部性原理，正在使用的数据的附近数据也大概率会被使用，所以CPU会按照Cache Line为一个单位加载一批连续的数据到缓存里，主流CPU一般为64B 例如你有一个数组，每个元素的类型为int64，大小为8B，当你用到第一个元素时，CPU">
+<meta property="og:type" content="article">
+<meta property="og:title" content="False sharing 伪共享问题">
+<meta property="og:url" content="https://shaffer.cn/uncategorized/false-sharing/">
+<meta property="og:site_name" content="朱晓峰">
+<meta property="og:description" content="Cache Line数据经过主存、L3、L2、L1 Cache到CPU寄存器进行运算，访问的速度逐级提高，L3一般为多核共享，L2、L1一般为单核本地使用。 按照局部性原理，正在使用的数据的附近数据也大概率会被使用，所以CPU会按照Cache Line为一个单位加载一批连续的数据到缓存里，主流CPU一般为64B 例如你有一个数组，每个元素的类型为int64，大小为8B，当你用到第一个元素时，CPU">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://shaffer.cn/images/false_sharing_01.png">
+<meta property="article:published_time" content="2024-07-06T14:41:23.000Z">
+<meta property="article:modified_time" content="2024-07-06T17:17:33.576Z">
+<meta property="article:author" content="Shaffer John">
+<meta property="article:tag" content="golang">
+<meta property="article:tag" content="cpu">
+<meta property="article:tag" content="伪共享">
+<meta property="article:tag" content="性能优化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://shaffer.cn/images/false_sharing_01.png">
+
+<link rel="canonical" href="https://shaffer.cn/uncategorized/false-sharing/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>False sharing 伪共享问题 | 朱晓峰</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">朱晓峰</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">一只生之无趣死之乏味的丧家之犬</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-photography">
+
+    <a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>Photography</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://shaffer.cn/uncategorized/false-sharing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Shaffer John">
+      <meta itemprop="description" content="一只生之无趣死之乏味的丧家之犬">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="朱晓峰">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          False sharing 伪共享问题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-07-06 22:41:23" itemprop="dateCreated datePublished" datetime="2024-07-06T22:41:23+08:00">2024-07-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-07-07 01:17:33" itemprop="dateModified" datetime="2024-07-07T01:17:33+08:00">2024-07-07</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Cache-Line"><a href="#Cache-Line" class="headerlink" title="Cache Line"></a>Cache Line</h1><p>数据经过主存、L3、L2、L1 Cache到CPU寄存器进行运算，访问的速度逐级提高，L3一般为多核共享，L2、L1一般为单核本地使用。</p>
+<p>按照局部性原理，正在使用的数据的附近数据也大概率会被使用，所以CPU会按照<code>Cache Line</code>为一个单位加载一批连续的数据到缓存里，主流CPU一般为64B</p>
+<p>例如你有一个数组，每个元素的类型为int64，大小为8B，当你用到第一个元素时，CPU会将另外7个元素也一起作为一个<code>Cache Line</code>加载到各级缓存中</p>
+<h1 id="什么是False-sharing伪共享"><a href="#什么是False-sharing伪共享" class="headerlink" title="什么是False sharing伪共享"></a>什么是False sharing伪共享</h1><p><img src="/../images/false_sharing_01.png" alt="false sharing"></p>
+<p>两个线程修改同一条<code>Cache Line</code>上的不同位置，发生了缓存不一致的情况，会导致L1、L2缓存上这条<code>Cache Line</code>被认为是无效数据</p>
+<p>此时就需要<code>MESI缓存一致性协议</code>和<code>RFO请求</code>核间通信方式，来标记自己本地缓存上<code>Cache Line</code>的状态并通知另一个核是否需要更新缓存，最后通过相对比较慢的<code>L3 Cache</code>同步数据，甚至穿透到主存，总之这些都会带来开销</p>
+<p>所以在这种情况下没有真正达到共享的目的，此为伪共享（其实应该翻译为错误共享）</p>
+<p>那延伸一下，<code>Cache Line</code>如果大小为1B一个单位，只要不是修改到同一个字节的位置，那是不是就没有这个问题了？</p>
+<p>但随之而来的是局部性的损失以及控制电路复杂度的提高，设计就是不断权衡利弊，这是另一个话题了</p>
+<h1 id="如何验证伪共享问题呢，我要眼见为实"><a href="#如何验证伪共享问题呢，我要眼见为实" class="headerlink" title="如何验证伪共享问题呢，我要眼见为实"></a>如何验证伪共享问题呢，我要眼见为实</h1><h2 id="复现"><a href="#复现" class="headerlink" title="复现"></a>复现</h2><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;time&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// a demo for false share</span></span><br><span class="line"><span class="keyword">type</span> MyInt64 <span class="keyword">struct</span> &#123;</span><br><span class="line">	val  <span class="type">int64</span> <span class="comment">// 8Byte</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	N = <span class="number">100000000</span></span><br><span class="line">	M = <span class="number">8</span></span><br><span class="line">	List = <span class="built_in">new</span>([<span class="number">8</span>]MyInt64)</span><br><span class="line">)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">run</span><span class="params">(idx <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> i:=N; i&gt;<span class="number">0</span>; i-- &#123;</span><br><span class="line">		List[idx].val = <span class="type">int64</span>(i)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	ch := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="type">int</span>, M) <span class="comment">// exit signal</span></span><br><span class="line">	start := time.Now()</span><br><span class="line">	<span class="keyword">for</span> i:=<span class="number">0</span>; i&lt;M; i++ &#123;</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(i <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">			run(i)</span><br><span class="line">			ch &lt;- <span class="number">1</span></span><br><span class="line">		&#125;(i)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> i:=<span class="number">0</span>; i&lt;M; i++ &#123;</span><br><span class="line">		&lt;-ch</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;%v\n&quot;</span>, time.Since(start))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们构造一个长度为8的数组，每个元素都是一个大小为64bit的类型，共占64Byte</p>
+<p>然后用8个协程分别更新各自索引位置的元素</p>
+<p>执行 <code>go run main.go</code></p>
+<p>此时耗时约在秒级：2.5329389s</p>
+<h2 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h2><p>如果我们加上一些padding，此时数组中每个元素都是64Byte的类型，每个元素都占满一个<code>Cache</code>，使得每个核操作不同的<code>Cache Line</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type padding int64</span><br><span class="line">type MyInt64 struct &#123;</span><br><span class="line">	val  int64 // 8Byte</span><br><span class="line">	pad1, pad2, pad3, pad4, pad5, pad6, pad7 padding // 56Byte</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>耗时约在百毫秒级别：113.9928ms</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>所以可见，如果我们编写的程序恰巧遇到了<code>False Sharing</code>，会导致严重的性能问题。</p>
+<p>目前<code>perf-c2c</code>等工具可以检测伪共享问题。开源的<code>Disruptor</code>框架也详细阐述了该问题</p>
+<p>Golang在<code>sync.Pool</code>中也有对应的设计</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> poolLocal <span class="keyword">struct</span> &#123;</span><br><span class="line">	poolLocalInternal</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Prevents false sharing on widespread platforms with</span></span><br><span class="line">	<span class="comment">// 128 mod (cache line size) = 0 .</span></span><br><span class="line">	pad [<span class="number">128</span> - unsafe.Sizeof(poolLocalInternal&#123;&#125;)%<span class="number">128</span>]<span class="type">byte</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="但是真的结束了吗？"><a href="#但是真的结束了吗？" class="headerlink" title="但是真的结束了吗？"></a>但是真的结束了吗？</h1><p>如果在上面的代码中不用数组，而是用slice会怎样？</p>
+<p>slice底层是什么结构，会有什么影响？</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> slice <span class="keyword">struct</span> &#123;</span><br><span class="line">	array unsafe.Pointer</span><br><span class="line">	<span class="built_in">len</span>   <span class="type">int</span></span><br><span class="line">	<span class="built_in">cap</span>   <span class="type">int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>如果改成8个pad会怎样？哪种对齐的结构对编译器更加友好？</p>
+<p>（实际8个pad速度更快，可以试试）</p>
+<p>7个pad</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">MOVQ	AX, SI</span><br><span class="line">SHLQ	$6, AX</span><br><span class="line">MOVQ	DX, (BX)(AX*1)</span><br><span class="line">DECQ	DX</span><br><span class="line">MOVQ	SI, AX</span><br><span class="line">TESTQ	DX, DX</span><br><span class="line">JLE	71</span><br><span class="line">MOVQ	main.List+8(SB), CX</span><br><span class="line">MOVQ	main.List(SB), BX</span><br><span class="line">NOP</span><br><span class="line">CMPQ	AX, CX</span><br></pre></td></tr></table></figure>
+
+<p>8个pad</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">LEAQ	(AX)(AX*8), SI</span><br><span class="line">MOVQ	DX, (BX)(SI*8)</span><br><span class="line">DECQ	DX</span><br><span class="line">TESTQ	DX, DX</span><br><span class="line">JLE	56</span><br><span class="line">MOVQ	main.List(SB), BX</span><br><span class="line">TESTB	AL, (BX)</span><br><span class="line">CMPQ	AX, $8</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>如果关闭编译优化会怎样？或者说编译优化究竟在优化什么？</p>
+<p>关闭编译优化：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">go build -gcflags=&quot;-N -l -S&quot; main.go</span><br><span class="line">0x000e 00014 (main.go:18)	MOVQ	AX, main.idx+40(SP)</span><br><span class="line">0x0013 00019 (main.go:19)	MOVQ	main.N(SB), DX</span><br><span class="line">0x001a 00026 (main.go:19)	MOVQ	DX, main.i+16(SP)</span><br><span class="line">0x001f 00031 (main.go:19)	NOP</span><br><span class="line">0x0020 00032 (main.go:19)	JMP	34</span><br><span class="line">0x0022 00034 (main.go:19)	CMPQ	main.i+16(SP), $0</span><br><span class="line">0x0028 00040 (main.go:19)	JGT	44</span><br><span class="line">0x002a 00042 (main.go:19)	JMP	91</span><br><span class="line">0x002c 00044 (main.go:20)	MOVQ	main.idx+40(SP), AX</span><br><span class="line">0x0031 00049 (main.go:20)	MOVQ	main.List+8(SB), CX</span><br><span class="line">0x0038 00056 (main.go:20)	MOVQ	main.List(SB), DX</span><br><span class="line">0x003f 00063 (main.go:20)	MOVQ	main.i+16(SP), BX</span><br><span class="line">0x0044 00068 (main.go:20)	CMPQ	CX, AX</span><br><span class="line">0x0047 00071 (main.go:20)	JHI	75</span><br><span class="line">0x0049 00073 (main.go:20)	JMP	101</span><br><span class="line">0x004b 00075 (main.go:20)	LEAQ	(DX)(AX*8), DX</span><br><span class="line">0x004f 00079 (main.go:20)	MOVQ	BX, (DX)</span><br><span class="line">0x0052 00082 (main.go:20)	JMP	84</span><br><span class="line">0x0054 00084 (main.go:19)	DECQ	main.i+16(SP)</span><br><span class="line">0x0059 00089 (main.go:19)	JMP	34</span><br><span class="line">0x005b 00091 (main.go:22)	MOVQ	24(SP), BP</span><br><span class="line">0x0060 00096 (main.go:22)	ADDQ	$32, SP</span><br><span class="line">0x0064 00100 (main.go:22)	RET</span><br><span class="line">0x0065 00101 (main.go:20)	PCDATA	$1, $0</span><br><span class="line">0x0065 00101 (main.go:20)	CALL	runtime.panicIndex(SB)</span><br><span class="line">0x006a 00106 (main.go:20)	XCHGL	AX, AX</span><br></pre></td></tr></table></figure>
+
+<p>开启编译优化：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">go build -gcflags=-S main.go</span><br><span class="line">0x000e 00014 (main.go:19)	MOVQ	main.N(SB), DX</span><br><span class="line">0x0015 00021 (main.go:19)	JMP	32</span><br><span class="line">0x0017 00023 (main.go:20)	MOVQ	DX, (BX)(AX*8)</span><br><span class="line">0x001b 00027 (main.go:19)	DECQ	DX</span><br><span class="line">0x001e 00030 (main.go:19)	NOP</span><br><span class="line">0x0020 00032 (main.go:19)	TESTQ	DX, DX</span><br><span class="line">0x0023 00035 (main.go:19)	JLE	58</span><br><span class="line">0x0025 00037 (main.go:20)	MOVQ	main.List+8(SB), CX</span><br><span class="line">0x002c 00044 (main.go:20)	MOVQ	main.List(SB), BX</span><br><span class="line">0x0033 00051 (main.go:20)	CMPQ	AX, CX</span><br><span class="line">0x0036 00054 (main.go:20)	JCS	23</span><br><span class="line">0x0038 00056 (main.go:20)	JMP	68</span><br><span class="line">0x003a 00058 (main.go:22)	MOVQ	16(SP), BP</span><br><span class="line">0x003f 00063 (main.go:22)	ADDQ	$24, SP</span><br><span class="line">0x0043 00067 (main.go:22)	RET</span><br><span class="line">0x0044 00068 (main.go:20)	PCDATA	$1, $0</span><br><span class="line">0x0044 00068 (main.go:20)	CALL	runtime.panicIndex(SB)</span><br><span class="line">0x0049 00073 (main.go:20)	XCHGL	AX, AX</span><br></pre></td></tr></table></figure>
+
+<p>可以看到把很多操作压在<code>DX</code>寄存器里操作了，不用内存取值了</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/golang/" rel="tag"># golang</a>
+              <a href="/tags/cpu/" rel="tag"># cpu</a>
+              <a href="/tags/%E4%BC%AA%E5%85%B1%E4%BA%AB/" rel="tag"># 伪共享</a>
+              <a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" rel="tag"># 性能优化</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/astronomy/spectrum-107-Piscium/" rel="prev" title="107 Piscium 恒星光谱计划">
+      <i class="fa fa-chevron-left"></i> 107 Piscium 恒星光谱计划
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Cache-Line"><span class="nav-number">1.</span> <span class="nav-text">Cache Line</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFFalse-sharing%E4%BC%AA%E5%85%B1%E4%BA%AB"><span class="nav-number">2.</span> <span class="nav-text">什么是False sharing伪共享</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%AA%8C%E8%AF%81%E4%BC%AA%E5%85%B1%E4%BA%AB%E9%97%AE%E9%A2%98%E5%91%A2%EF%BC%8C%E6%88%91%E8%A6%81%E7%9C%BC%E8%A7%81%E4%B8%BA%E5%AE%9E"><span class="nav-number">3.</span> <span class="nav-text">如何验证伪共享问题呢，我要眼见为实</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E7%8E%B0"><span class="nav-number">3.1.</span> <span class="nav-text">复现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%B9%E8%BF%9B"><span class="nav-number">3.2.</span> <span class="nav-text">改进</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%86%E6%98%AF%E7%9C%9F%E7%9A%84%E7%BB%93%E6%9D%9F%E4%BA%86%E5%90%97%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">但是真的结束了吗？</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Shaffer John"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Shaffer John</p>
+  <div class="site-description" itemprop="description">一只生之无趣死之乏味的丧家之犬</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/shafferjohn" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;shafferjohn" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:www.pig2@qq.com" title="E-Mail → mailto:www.pig2@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shaffer John</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
