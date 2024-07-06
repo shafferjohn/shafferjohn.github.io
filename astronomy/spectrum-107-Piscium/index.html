@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"shaffer.cn","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":"enable","preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"shaffer.cn","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":"enable","preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="前言记录一下实现一个想法的过程 真实影像远程天文台拍摄过程 原图略 处理过程 光谱图像制作获取原始数据 数据源：https:&#x2F;&#x2F;www.eso.org&#x2F;sci&#x2F;observing&#x2F;phase3&#x2F;data_streams.html 搜索HD编号：HD 10476，找到两份光谱数据，选择合适的下载，最好包含可见光波段   处理光谱数据 读取数据，并转换合适的单位 降采样（可选） Savitzky-Go">
@@ -186,6 +186,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -320,7 +321,7 @@
       <i class="fa fa-chevron-left"></i> Golang panic疑难杂症（二）
     </a></div>
       <div class="post-nav-item">
-    <a href="/uncategorized/false-sharing/" rel="next" title="False sharing 伪共享问题">
+    <a href="/golang/false-sharing/" rel="next" title="False sharing 伪共享问题">
       False sharing 伪共享问题 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -493,6 +494,7 @@
 
 
 
+  <script src="//code.tidio.co/di5rmcmowqnqky0stgnzo1e7t7imyexz.js"></script>
 
 
 
